@@ -96,12 +96,12 @@ nosso-farol/
 │   │   ├── page.tsx                  # Homepage (/)
 │   │   ├── globals.css
 │   │   ├── not-found.tsx             # 404 contemplativa
-│   │   ├── criar/
-│   │   │   └── page.tsx              # Tela de criação (/criar)
+│   │   ├── create/
+│   │   │   └── page.tsx              # Tela de criação (/create)
 │   │   ├── [slug]/
 │   │   │   └── page.tsx              # Página pública do farol (/[slug])
-│   │   ├── sobre/
-│   │   │   └── page.tsx              # Página filosófica (/sobre)
+│   │   ├── about/
+│   │   │   └── page.tsx              # Página filosófica (/about)
 │   │   └── api/
 │   │       └── lighthouses/
 │   │           ├── route.ts          # POST /api/lighthouses
@@ -299,11 +299,11 @@ export const connectDB = async (): Promise<typeof mongoose> => {
 
 **Tipo:** Server Component (estático)
 
-Apresenta o produto e direciona para `/criar`. Sem dados dinâmicos.
+Apresenta o produto e direciona para `/create`. Sem dados dinâmicos.
 
 ---
 
-### `GET /criar` — Criar Farol
+### `GET /create` — Criar Farol
 
 **Tipo:** Server Component (shell) + `<CreateForm />` (Client Component)
 
@@ -373,7 +373,7 @@ const LighthousePage = async ({ params }: { params: { slug: string } }) => {
 
 ---
 
-### `GET /sobre` — Página Filosófica
+### `GET /about` — Página Filosófica
 
 **Tipo:** Server Component (estático)
 
@@ -594,27 +594,27 @@ Exibe a URL, botão de copiar (`navigator.clipboard.writeText`) e avisos sobre g
 ```
 [Homepage]
   → Usuário clica em "Criar um farol"
-  → Navega para /criar
+  → Navega para /create
 
-[/criar — idle]
+[/create — idle]
   → Campo "Nome do farol" (placeholder: "Para quem é este farol?")
   → Campo "Senha" (placeholder: "Uma senha para acender")
   → Aviso: "Guarde a senha. Ela não pode ser recuperada."
   → Botão "Criar"
 
-[/criar — validação falha (client-side)]
+[/create — validação falha (client-side)]
   → Mensagem inline sob o campo inválido
   → Foco vai para o primeiro campo inválido
 
-[/criar — loading]
+[/create — loading]
   → Botão vira "Criando..." + spinner
   → Campos desabilitados
 
-[/criar — erro de API]
+[/create — erro de API]
   → Mensagem de erro acima do formulário
   → Campos reabilitados
 
-[/criar — sucesso]
+[/create — sucesso]
   → Formulário é substituído por <CreatedSuccess />
   → URL em destaque + botão "Copiar"
   → Avisos sobre salvar a URL e a senha
@@ -869,7 +869,7 @@ export const metadata: Metadata = {
 
 | Rota | Cache |
 |---|---|
-| `/`, `/criar`, `/sobre` | Estático (build time) |
+| `/`, `/create`, `/about` | Estático (build time) |
 | `/[slug]` | ISR com `revalidate: 60` |
 | `POST /api/lighthouses` | Sem cache |
 | `POST /api/lighthouses/[slug]/signal` | Sem cache |
@@ -1078,7 +1078,7 @@ Configurar `MONGODB_URI` e `NEXT_PUBLIC_APP_URL` no painel da Vercel para produ�
 - [ ] Homepage (`/`)
 - [ ] `src/components/create/CreateForm.tsx`
 - [ ] `src/components/create/CreatedSuccess.tsx`
-- [ ] Página `/criar`
+- [ ] Página `/create`
 - [ ] `src/components/lighthouse/LighthouseDisplay.tsx`
 - [ ] `src/components/lighthouse/LighthouseStatus.tsx`
 - [ ] `src/components/lighthouse/LightButton.tsx`
@@ -1098,7 +1098,7 @@ Configurar `MONGODB_URI` e `NEXT_PUBLIC_APP_URL` no painel da Vercel para produ�
 - [ ] `generateMetadata` dinâmico na página do farol
 - [ ] Responsividade: testar em 320px, 375px, 768px
 - [ ] Acessibilidade: `alt` nas imagens, `aria-label` nos elementos interativos
-- [ ] Página `/sobre`
+- [ ] Página `/about`
 - [ ] Revisão de copy (tom, ortografia)
 
 **Entregável:** UI polida, responsiva e acessível.

@@ -1,0 +1,8 @@
+@import "tailwindcss";
+@plugin "daisyui" {
+  themes: aqua --default;
+}
+
+@theme inline {
+  --font-serif: var(--font-lora), Georgia, serif;
+}
