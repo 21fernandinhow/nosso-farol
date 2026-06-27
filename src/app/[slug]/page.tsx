@@ -65,7 +65,7 @@ const LighthousePage = async ({ params }: PageProps) => {
   return (
     <main className="min-h-screen flex flex-col">
       <header className="flex items-center justify-center px-6 pt-10 pb-2">
-        <h1 className="font-serif text-4xl text-center">{lighthouse.name}</h1>
+        <h1 className={`font-serif text-4xl text-center${isLit ? " text-[#fde68a]" : ""}`}>{lighthouse.name}</h1>
       </header>
 
       <section className="flex-1 flex items-center justify-center px-4">
