@@ -25,6 +25,8 @@ export const LighthouseHistory = ({ litDates, startDate }: LighthouseHistoryProp
   return (
     <div className="flex flex-col gap-2">
       <div
+        role="img"
+        aria-label="Histórico de acendimentos"
         style={{
           display: "grid",
           gridTemplateRows: "repeat(7, 12px)",
@@ -40,6 +42,7 @@ export const LighthouseHistory = ({ litDates, startDate }: LighthouseHistoryProp
             className={`rounded-sm cursor-default ${day.lit ? "bg-primary" : "bg-base-300"}`}
             onMouseEnter={() => setLabel(formatLabel(day.date, day.lit))}
             onMouseLeave={() => setLabel(null)}
+            aria-hidden="true"
           />
         ))}
       </div>

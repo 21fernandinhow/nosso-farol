@@ -1,22 +1,19 @@
 interface LighthouseDisplayProps {
   isLit: boolean
+  className?: string
 }
 
-export const LighthouseDisplay = ({ isLit }: LighthouseDisplayProps) => (
+export const LighthouseDisplay = ({ isLit, className }: LighthouseDisplayProps) => (
   <svg
     viewBox="-22 0 124 200"
-    className={`w-56 h-auto select-none${isLit ? " animate-[glow-pulse_3s_ease-in-out_infinite]" : ""}`}
+    className={`${className ?? "w-56"} h-auto select-none${isLit ? " animate-[glow-pulse_3s_ease-in-out_infinite]" : ""}`}
     xmlns="http://www.w3.org/2000/svg"
     aria-label={isLit ? "Farol aceso" : "Farol apagado"}
     role="img"
   >
-    {/* Glow (aceso) — centrado na lente */}
-    {isLit && (
-      <>
-        <circle cx="40" cy="52" r="40" fill="#FCD34D" opacity="0.07" />
-        <circle cx="40" cy="52" r="24" fill="#FCD34D" opacity="0.14" />
-      </>
-    )}
+    {/* Glow — sempre renderizado, opacidade transiciona */}
+    <circle cx="40" cy="52" r="40" fill="#FCD34D" style={{ opacity: isLit ? 0.07 : 0, transition: "opacity 1s ease" }} />
+    <circle cx="40" cy="52" r="24" fill="#FCD34D" style={{ opacity: isLit ? 0.14 : 0, transition: "opacity 1s ease" }} />
 
     {/* Ilha */}
     <ellipse cx="40" cy="172" rx="58" ry="18" fill="#7a5c14" />
@@ -45,14 +42,8 @@ export const LighthouseDisplay = ({ isLit }: LighthouseDisplayProps) => (
     {/* Cúpula */}
     <path d="M 22 44 L 58 44 L 40 28 Z" fill="#7b1c1c" />
 
-    {/* Lente */}
-    {isLit ? (
-      <>
-        <circle cx="40" cy="55" r="8" fill="#FCD34D" />
-        <circle cx="40" cy="55" r="5" fill="#FEF9C3" />
-      </>
-    ) : (
-      <circle cx="40" cy="55" r="8" fill="#5c1010" />
-    )}
+    {/* Lente — fill e opacidade transicionam */}
+    <circle cx="40" cy="55" r="8" style={{ fill: isLit ? "#FCD34D" : "#5c1010", transition: "fill 700ms ease" }} />
+    <circle cx="40" cy="55" r="5" style={{ fill: "#FEF9C3", opacity: isLit ? 1 : 0, transition: "opacity 700ms ease" }} />
   </svg>
 )

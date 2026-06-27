@@ -1,0 +1,12 @@
+<svg viewBox="0 0 32 52" xmlns="http://www.w3.org/2000/svg">
+  <!-- Torre -->
+  <path d="M 3 50 L 29 50 L 23 24 L 9 24 Z" fill="#d44040"/>
+  <!-- Sacada -->
+  <rect x="5" y="21" width="22" height="3" rx="1" fill="#7b1c1c"/>
+  <!-- Sala da lanterna -->
+  <rect x="9" y="10" width="14" height="12" rx="1.5" fill="#7b1c1c"/>
+  <!-- Cúpula -->
+  <path d="M 7 10 L 25 10 L 16 2 Z" fill="#7b1c1c"/>
+  <!-- Lente -->
+  <circle cx="16" cy="17" r="4" fill="#5c1010"/>
+</svg>

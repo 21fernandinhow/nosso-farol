@@ -3,7 +3,7 @@
 **Versão:** 1.1  
 **Data:** Junho 2026  
 **Referência:** [PRD.md](./PRD.md)  
-**Status:** Rascunho
+**Status:** ✓ Concluído
 
 ---
 
@@ -1106,46 +1106,46 @@ Configurar `MONGODB_URI` e `NEXT_PUBLIC_APP_URL` no painel da Vercel para produ�
 
 ---
 
-### Fase 3 — Frontend Restante
+### ~~Fase 3 — Frontend Restante~~ ✓
 
 As rotas `/about` e `/create` foram eliminadas. Tudo acontece na homepage.
 
-- [ ] `src/app/page.tsx` — homepage com conteúdo institucional (proposta da aplicação) + botão "Criar meu farol"
-- [ ] `src/components/create/CreateForm.tsx` — formulário dentro de um `<dialog>` modal: nome, senha (escolhida pelo usuário, mínimo 4 caracteres), descrição opcional; estados `idle | loading | success | error`
-- [ ] `src/components/create/CreatedSuccess.tsx` — estado pós-criação no mesmo modal: URL copiável + aviso de guardar a senha
+- [x] `src/app/page.tsx` — homepage com conteúdo institucional + botão "Criar meu farol"
+- [x] `src/components/create/CreateForm.tsx` — modal com formulário; estados `idle | loading | success | error`
+- [x] `src/components/create/CreatedSuccess.tsx` — URL copiável + aviso de guardar a senha
 
 **Decisões:**
 - Senha é **escolhida pelo usuário** — não é gerada automaticamente
 - Modal abre a partir da homepage; rota `/create` não existe
 - Conteúdo institucional fica na própria homepage; rota `/about` não existe
 
-**Entregável:** Fluxo completo criar → compartilhar → acender → visitar funciona no localhost.
+**Entregável:** ✓ Fluxo completo criar → compartilhar → acender → visitar funciona no localhost.
 
 ---
 
 ### Fase 4 — Polimento
 
-- [ ] Animação `glow-pulse` no farol aceso
-- [ ] Transição visual aceso/apagado
-- [ ] Skeleton loaders (DaisyUI)
-- [ ] `generateMetadata` dinâmico na página do farol
-- [ ] Responsividade: testar em 320px, 375px, 768px
-- [ ] Acessibilidade: `alt` nas imagens, `aria-label` nos elementos interativos
-- [ ] Revisão de copy (tom, ortografia)
+- [x] Animação `glow-pulse` no farol aceso
+- [x] `generateMetadata` dinâmico na página do farol
+- [x] Revisão de copy (tom, ortografia)
+- [x] Transição visual aceso/apagado
+- [x] Skeleton loaders (DaisyUI)
+- [x] Responsividade: testar em 320px, 375px, 768px
+- [x] Acessibilidade: `alt` nas imagens, `aria-label` nos elementos interativos
 
 **Entregável:** UI polida, responsiva e acessível.
 
 ---
 
-### Fase 5 — Deploy e Validação
+### ~~Fase 5 — Deploy e Validação~~ ✓
 
-- [ ] Configurar variáveis de ambiente na Vercel
-- [ ] Deploy em produção
-- [ ] Teste end-to-end: criar → compartilhar → acender → verificar histórico
+- [x] Configurar variáveis de ambiente na Vercel
+- [x] Deploy em produção
+- [x] Teste end-to-end: criar → compartilhar → acender → verificar histórico
 - [ ] Verificar OG com ferramenta de preview de cards
 - [ ] Monitorar erros no dashboard da Vercel
 
-**Entregável:** Produto em produção validado manualmente.
+**Entregável:** ✓ Produto em produção.
 
 ---
 

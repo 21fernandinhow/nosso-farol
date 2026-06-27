@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Lora } from "next/font/google";
 import "./globals.css";
 
@@ -7,6 +7,10 @@ const lora = Lora({
   subsets: ["latin"],
   display: "swap",
 });
+
+export const viewport: Viewport = {
+  themeColor: "#042f2e",
+}
 
 export const metadata: Metadata = {
   metadataBase: new URL(

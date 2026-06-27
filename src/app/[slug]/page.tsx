@@ -1,4 +1,5 @@
 import { notFound } from "next/navigation"
+import Link from "next/link"
 import type { Metadata } from "next"
 import { connectDB } from "@/lib/mongodb"
 import { Lighthouse } from "@/models/Lighthouse"
@@ -58,23 +59,31 @@ const LighthousePage = async ({ params }: PageProps) => {
   const litAt = lighthouse.litAt?.toISOString() ?? null
 
   return (
-    <main className="min-h-screen flex flex-col">
-      <header className="flex items-center justify-center px-6 pt-10 pb-2">
-        <h1 className={"font-serif text-4xl text-center"}>{lighthouse.name}</h1>
-      </header>
+    <main className="flex flex-col">
+      <div className="min-h-screen flex flex-col">
+        <header className="flex items-center justify-center px-6 pt-10 pb-2">
+          <h1 className={`font-serif text-4xl text-center transition-colors duration-700${isLit ? " text-[#fde68a]" : ""}`}>{lighthouse.name}</h1>
+        </header>
 
-      <section className="flex-1 flex items-center justify-center px-4">
-        <LighthouseDisplay isLit={isLit} />
-      </section>
+        <section className="flex-1 flex items-center justify-center px-4">
+          <LighthouseDisplay isLit={isLit} />
+        </section>
 
-      <footer className="flex items-center justify-between px-6 py-4">
-        <LighthouseStatus isLit={isLit} litAt={litAt} />
-        <div className="flex items-center gap-1">
-          <InfoButton name={lighthouse.name} description={lighthouse.description ?? null} />
-          <LightButton slug={slug} isLit={isLit} />
-          <HistoryButton litDates={litDates} startDate={startDate.toISOString()} />
-        </div>
-      </footer>
+        <footer className="flex items-center justify-between px-4 sm:px-6 py-4">
+          <LighthouseStatus isLit={isLit} litAt={litAt} />
+          <div className="flex items-center gap-1 flex-shrink-0 ml-2">
+            <InfoButton name={lighthouse.name} description={lighthouse.description ?? null} />
+            <LightButton slug={slug} isLit={isLit} />
+            <HistoryButton litDates={litDates} startDate={startDate.toISOString()} />
+          </div>
+        </footer>
+      </div>
+
+      <div className="text-center px-6 py-3 bg-base-200">
+        <Link href="/" className="text-xs text-base-content/30 hover:text-base-content/60 transition-colors">
+          O que é o Nosso Farol?
+        </Link>
+      </div>
     </main>
   )
 }
