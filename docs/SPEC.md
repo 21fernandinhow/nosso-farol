@@ -1070,27 +1070,55 @@ Configurar `MONGODB_URI` e `NEXT_PUBLIC_APP_URL` no painel da Vercel para produ�
 
 ---
 
-### Fase 2 — Frontend Core (Dias 4–7)
+### Fase 2 — Página de Slug (Dias 4–6)
 
+#### 2.1 — Layout root e estrutura estática
+
+- [ ] `src/app/layout.tsx` — root layout com tema DaisyUI aqua e fonte Lora
 - [ ] `src/utils/time.ts` — `formatStatus`
-- [ ] `src/utils/history.ts` — `buildHistoryGrid`
-- [ ] `src/app/layout.tsx` — root layout com tema e fonte Lora
-- [ ] Homepage (`/`)
-- [ ] `src/components/create/CreateForm.tsx`
-- [ ] `src/components/create/CreatedSuccess.tsx`
-- [ ] Página `/create`
-- [ ] `src/components/lighthouse/LighthouseDisplay.tsx`
-- [ ] `src/components/lighthouse/LighthouseStatus.tsx`
-- [ ] `src/components/lighthouse/LightButton.tsx`
-- [ ] `src/components/lighthouse/LighthouseHistory.tsx`
-- [ ] Página `/[slug]` (Server Component com leitura direta do banco + ISR)
-- [ ] `src/app/not-found.tsx`
+- [ ] `src/components/lighthouse/LighthouseDisplay.tsx` — SVG do farol (aceso/apagado)
+- [ ] `src/components/lighthouse/LighthouseStatus.tsx` — mensagem de atividade (Client Component)
+- [ ] `src/app/[slug]/page.tsx` — estrutura visual estática: nome, farol, status hardcoded, três ícones (informação, histórico, acender) posicionados no canto
 
-**Entregável:** Fluxo completo funcionando no localhost.
+#### 2.2 — Dados dinâmicos
+
+- [ ] `src/app/[slug]/page.tsx` — leitura real do banco (nome, `isLit`, `litAt`), apagamento lazy, `notFound()` se slug inválido
+- [ ] `generateMetadata` dinâmico na página do farol
+- [ ] `src/app/not-found.tsx` — 404 contemplativa
+
+#### 2.3 — Botão acender
+
+- [ ] `src/components/lighthouse/LightButton.tsx` — modal de senha, estados `idle | prompt | loading | error | success`
+- [ ] Botão desabilitado quando já aceso (`isLit = true`)
+- [ ] Atualização local do estado visual após sucesso (sem reload)
+
+#### 2.4 — Botão informação
+
+- [ ] `src/components/lighthouse/InfoButton.tsx` — modal com nome, descrição do farol e explicação da proposta da aplicação
+
+#### 2.5 — Botão histórico
+
+- [ ] `src/utils/history.ts` — `buildHistoryGrid`
+- [ ] `src/components/lighthouse/LighthouseHistory.tsx` — grade de 365 dias
+- [ ] `src/components/lighthouse/HistoryButton.tsx` — modal com a grade; busca os sinais (`Signal.aggregate`) ao abrir
+
+**Entregável:** Página `/[slug]` completa e funcional — layout, dados dinâmicos, os três botões com seus modais.
 
 ---
 
-### Fase 3 — Polimento (Dias 8–10)
+### Fase 3 — Frontend Restante (Dias 7–9)
+
+- [ ] Homepage (`/`) — apresenta o produto, direciona para `/create`
+- [ ] `src/components/create/CreateForm.tsx` — formulário de criação (Client Component)
+- [ ] `src/components/create/CreatedSuccess.tsx` — estado pós-criação com URL e botão copiar
+- [ ] Página `/create`
+- [ ] Página `/about`
+
+**Entregável:** Fluxo completo criar → compartilhar → acender → visitar funciona no localhost.
+
+---
+
+### Fase 4 — Polimento (Dias 8–10)
 
 - [ ] Animação `glow-pulse` no farol aceso
 - [ ] Transição visual aceso/apagado
@@ -1105,7 +1133,7 @@ Configurar `MONGODB_URI` e `NEXT_PUBLIC_APP_URL` no painel da Vercel para produ�
 
 ---
 
-### Fase 4 — Deploy e Validação (Dias 11–12)
+### Fase 5 — Deploy e Validação (Dias 11–12)
 
 - [ ] Configurar variáveis de ambiente na Vercel
 - [ ] Deploy em produção
@@ -1123,9 +1151,10 @@ Configurar `MONGODB_URI` e `NEXT_PUBLIC_APP_URL` no painel da Vercel para produ�
 |---|---|
 | 0 | `npm run dev` funciona, Vercel deploy ativo, MongoDB conectado |
 | 1 | As 2 rotas de API retornam status corretos nos testes manuais |
-| 2 | Fluxo criar → acender → visitar funciona no localhost |
-| 3 | UI correta em mobile e desktop; tooltip do histórico funciona |
-| 4 | Os 3 fluxos principais funcionam em produção |
+| 2 | Página do Farol funcionando como esperado |
+| 3 | Fluxo criar → acender → visitar funciona no localhost |
+| 4 | UI correta em mobile e desktop; tooltip do histórico funciona |
+| 5 | Os 3 fluxos principais funcionam em produção |
 
 ---
 
