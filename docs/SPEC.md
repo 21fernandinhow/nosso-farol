@@ -1042,83 +1042,88 @@ Configurar `MONGODB_URI` e `NEXT_PUBLIC_APP_URL` no painel da Vercel para produ�
 
 ## 16. Plano de Implementação
 
-### Fase 0 — Setup (Dia 1)
+### ~~Fase 0 — Setup~~ ✓
 
-- [ ] `npx create-next-app@latest nosso-farol --typescript --tailwind --app --src-dir`
-- [ ] Instalar DaisyUI, configurar tema `aqua`
-- [ ] Instalar: `mongoose bcryptjs nanoid zod` + `@types/bcryptjs`
-- [ ] Configurar `tsconfig.json` com `strict: true` e path alias `@/*`
-- [ ] Criar estrutura de diretórios (seção 3)
-- [ ] Configurar `.env.local` com MongoDB Atlas URI
-- [ ] Deploy inicial na Vercel para validar pipeline
+- [x] `npx create-next-app@latest nosso-farol --typescript --tailwind --app --src-dir`
+- [x] Instalar DaisyUI, configurar tema `aqua`
+- [x] Instalar: `mongoose bcryptjs nanoid zod` + `@types/bcryptjs`
+- [x] Configurar `tsconfig.json` com `strict: true` e path alias `@/*`
+- [x] Criar estrutura de diretórios (seção 3)
+- [x] Configurar `.env.local` com MongoDB Atlas URI
+- [x] Deploy inicial na Vercel para validar pipeline
 
-**Entregável:** Projeto configurado, MongoDB conectado, deploy funcionando.
-
----
-
-### Fase 1 — Backend Core (Dias 2–3)
-
-- [ ] `src/lib/mongodb.ts` — singleton de conexão
-- [ ] `src/models/Lighthouse.ts` — schema e model
-- [ ] `src/models/Signal.ts` — schema e model
-- [ ] `src/lib/slug.ts` — gerador de slugs
-- [ ] `POST /api/lighthouses` — criar farol
-- [ ] `POST /api/lighthouses/[slug]/signal` — acender (bcrypt + signal)
-- [ ] Testar as duas rotas manualmente (curl ou Postman)
-
-**Entregável:** As 2 rotas de API funcionando corretamente.
+**Entregável:** ✓ Projeto configurado, MongoDB conectado, deploy funcionando.
 
 ---
 
-### Fase 2 — Página de Slug (Dias 4–6)
+### ~~Fase 1 — Backend Core~~ ✓
+
+- [x] `src/lib/mongodb.ts` — singleton de conexão
+- [x] `src/models/Lighthouse.ts` — schema e model
+- [x] `src/models/Signal.ts` — schema e model
+- [x] `src/lib/slug.ts` — gerador de slugs
+- [x] `POST /api/lighthouses` — criar farol
+- [x] `POST /api/lighthouses/[slug]/signal` — acender (bcrypt + signal)
+- [x] Testar as duas rotas manualmente (curl ou Postman)
+
+**Entregável:** ✓ As 2 rotas de API funcionando corretamente.
+
+---
+
+### ~~Fase 2 — Página de Slug~~ ✓
 
 #### 2.1 — Layout root e estrutura estática
 
-- [ ] `src/app/layout.tsx` — root layout com tema DaisyUI aqua e fonte Lora
-- [ ] `src/utils/time.ts` — `formatStatus`
-- [ ] `src/components/lighthouse/LighthouseDisplay.tsx` — SVG do farol (aceso/apagado)
-- [ ] `src/components/lighthouse/LighthouseStatus.tsx` — mensagem de atividade (Client Component)
-- [ ] `src/app/[slug]/page.tsx` — estrutura visual estática: nome, farol, status hardcoded, três ícones (informação, histórico, acender) posicionados no canto
+- [x] `src/app/layout.tsx` — root layout com tema DaisyUI aqua e fonte Lora
+- [x] `src/utils/time.ts` — `formatStatus`
+- [x] `src/components/lighthouse/LighthouseDisplay.tsx` — SVG do farol (aceso/apagado)
+- [x] `src/components/lighthouse/LighthouseStatus.tsx` — mensagem de atividade (Client Component)
+- [x] `src/app/[slug]/page.tsx` — estrutura visual estática: nome, farol, status hardcoded, três ícones (informação, histórico, acender) posicionados no canto
 
 #### 2.2 — Dados dinâmicos
 
-- [ ] `src/app/[slug]/page.tsx` — leitura real do banco (nome, `isLit`, `litAt`), apagamento lazy, `notFound()` se slug inválido
-- [ ] `generateMetadata` dinâmico na página do farol
-- [ ] `src/app/not-found.tsx` — 404 contemplativa
+- [x] `src/app/[slug]/page.tsx` — leitura real do banco (nome, `isLit`, `litAt`), apagamento lazy, `notFound()` se slug inválido
+- [x] `generateMetadata` dinâmico na página do farol
+- [x] `src/app/not-found.tsx` — 404 contemplativa
 
 #### 2.3 — Botão acender
 
-- [ ] `src/components/lighthouse/LightButton.tsx` — modal de senha, estados `idle | prompt | loading | error | success`
-- [ ] Botão desabilitado quando já aceso (`isLit = true`)
-- [ ] Atualização local do estado visual após sucesso (sem reload)
+- [x] `src/components/lighthouse/LightButton.tsx` — modal de senha, estados `idle | prompt | loading | error | success`
+- [x] Botão desabilitado quando já aceso (`isLit = true`)
+- [x] Atualização local do estado visual após sucesso (sem reload)
 
 #### 2.4 — Botão informação
 
-- [ ] `src/components/lighthouse/InfoButton.tsx` — modal com nome, descrição do farol e explicação da proposta da aplicação
+- [x] `src/components/lighthouse/InfoButton.tsx` — modal com nome, descrição do farol e explicação da proposta da aplicação
 
 #### 2.5 — Botão histórico
 
-- [ ] `src/utils/history.ts` — `buildHistoryGrid`
-- [ ] `src/components/lighthouse/LighthouseHistory.tsx` — grade de 365 dias
-- [ ] `src/components/lighthouse/HistoryButton.tsx` — modal com a grade; busca os sinais (`Signal.aggregate`) ao abrir
+- [x] `src/utils/history.ts` — `buildHistoryGrid`
+- [x] `src/components/lighthouse/LighthouseHistory.tsx` — grade binária (acendeu / não acendeu) a partir de `createdAt`
+- [x] `src/components/lighthouse/HistoryButton.tsx` — modal com a grade
 
-**Entregável:** Página `/[slug]` completa e funcional — layout, dados dinâmicos, os três botões com seus modais.
+**Entregável:** ✓ Página `/[slug]` completa e funcional — layout, dados dinâmicos, os três botões com seus modais.
 
 ---
 
-### Fase 3 — Frontend Restante (Dias 7–9)
+### Fase 3 — Frontend Restante
 
-- [ ] Homepage (`/`) — apresenta o produto, direciona para `/create`
-- [ ] `src/components/create/CreateForm.tsx` — formulário de criação (Client Component)
-- [ ] `src/components/create/CreatedSuccess.tsx` — estado pós-criação com URL e botão copiar
-- [ ] Página `/create`
-- [ ] Página `/about`
+As rotas `/about` e `/create` foram eliminadas. Tudo acontece na homepage.
+
+- [ ] `src/app/page.tsx` — homepage com conteúdo institucional (proposta da aplicação) + botão "Criar meu farol"
+- [ ] `src/components/create/CreateForm.tsx` — formulário dentro de um `<dialog>` modal: nome, senha (escolhida pelo usuário, mínimo 4 caracteres), descrição opcional; estados `idle | loading | success | error`
+- [ ] `src/components/create/CreatedSuccess.tsx` — estado pós-criação no mesmo modal: URL copiável + aviso de guardar a senha
+
+**Decisões:**
+- Senha é **escolhida pelo usuário** — não é gerada automaticamente
+- Modal abre a partir da homepage; rota `/create` não existe
+- Conteúdo institucional fica na própria homepage; rota `/about` não existe
 
 **Entregável:** Fluxo completo criar → compartilhar → acender → visitar funciona no localhost.
 
 ---
 
-### Fase 4 — Polimento (Dias 8–10)
+### Fase 4 — Polimento
 
 - [ ] Animação `glow-pulse` no farol aceso
 - [ ] Transição visual aceso/apagado
@@ -1126,14 +1131,13 @@ Configurar `MONGODB_URI` e `NEXT_PUBLIC_APP_URL` no painel da Vercel para produ�
 - [ ] `generateMetadata` dinâmico na página do farol
 - [ ] Responsividade: testar em 320px, 375px, 768px
 - [ ] Acessibilidade: `alt` nas imagens, `aria-label` nos elementos interativos
-- [ ] Página `/about`
 - [ ] Revisão de copy (tom, ortografia)
 
 **Entregável:** UI polida, responsiva e acessível.
 
 ---
 
-### Fase 5 — Deploy e Validação (Dias 11–12)
+### Fase 5 — Deploy e Validação
 
 - [ ] Configurar variáveis de ambiente na Vercel
 - [ ] Deploy em produção
