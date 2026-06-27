@@ -69,7 +69,7 @@ export const CreateForm = () => {
                   <label className="text-sm opacity-70">Nome do farol</label>
                   <input
                     type="text"
-                    placeholder="Para quem é este farol?"
+                    placeholder="ex: para minha avó Maria"
                     className="input input-bordered w-full"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
