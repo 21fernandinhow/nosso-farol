@@ -22,7 +22,7 @@ export const POST = async (request: Request) => {
     }
 
     const { name, description, password } = result.data
-    const slug = await generateUniqueSlug()
+    const slug = await generateUniqueSlug(name)
     const passwordHash = await bcrypt.hash(password, 12)
 
     await Lighthouse.create({ name, description: description ?? null, slug, passwordHash })
