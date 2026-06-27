@@ -3,6 +3,11 @@
   themes: aqua --default;
 }
 
+@keyframes glow-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.75; filter: brightness(1.3); }
+}
+
 @theme inline {
   --font-serif: var(--font-lora), Georgia, serif;
 }
