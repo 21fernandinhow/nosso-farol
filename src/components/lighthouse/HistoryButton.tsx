@@ -4,11 +4,11 @@ import { useRef } from "react"
 import { LighthouseHistory } from "./LighthouseHistory"
 
 interface HistoryButtonProps {
-  data: Array<{ _id: string; count: number }>
+  litDates: string[]
   startDate: string
 }
 
-export const HistoryButton = ({ data, startDate }: HistoryButtonProps) => {
+export const HistoryButton = ({ litDates, startDate }: HistoryButtonProps) => {
   const dialogRef = useRef<HTMLDialogElement>(null)
 
   return (
@@ -23,9 +23,9 @@ export const HistoryButton = ({ data, startDate }: HistoryButtonProps) => {
       </button>
 
       <dialog ref={dialogRef} className="modal">
-        <div className="modal-box w-auto max-w-2xl">
+        <div className="modal-box max-w-2xl">
           <h3 className="font-bold text-lg mb-4">Histórico de sinais</h3>
-          <LighthouseHistory data={data} startDate={startDate} />
+          <LighthouseHistory litDates={litDates} startDate={startDate} />
           <div className="modal-action">
             <form method="dialog">
               <button className="btn">Fechar</button>

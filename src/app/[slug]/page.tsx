@@ -45,19 +45,14 @@ const LighthousePage = async ({ params }: PageProps) => {
     }
   }
 
-  const startDate = new Date()
-  startDate.setDate(startDate.getDate() - 364)
+  const startDate = lighthouse.createdAt
 
-  const historyData = await Signal.aggregate<{ _id: string; count: number }>([
+  const historyRaw = await Signal.aggregate<{ _id: string }>([
     { $match: { lighthouseId: lighthouse._id, createdAt: { $gte: startDate } } },
-    {
-      $group: {
-        _id: { $dateToString: { format: "%Y-%m-%d", date: "$createdAt" } },
-        count: { $sum: 1 },
-      },
-    },
+    { $group: { _id: { $dateToString: { format: "%Y-%m-%d", date: "$createdAt" } } } },
     { $sort: { _id: 1 } },
   ])
+  const litDates = historyRaw.map((d) => d._id)
 
   const isLit = lighthouse.isLit
   const litAt = lighthouse.litAt?.toISOString() ?? null
@@ -65,7 +60,7 @@ const LighthousePage = async ({ params }: PageProps) => {
   return (
     <main className="min-h-screen flex flex-col">
       <header className="flex items-center justify-center px-6 pt-10 pb-2">
-        <h1 className={`font-serif text-4xl text-center${isLit ? " text-[#fde68a]" : ""}`}>{lighthouse.name}</h1>
+        <h1 className={"font-serif text-4xl text-center"}>{lighthouse.name}</h1>
       </header>
 
       <section className="flex-1 flex items-center justify-center px-4">
@@ -76,8 +71,8 @@ const LighthousePage = async ({ params }: PageProps) => {
         <LighthouseStatus isLit={isLit} litAt={litAt} />
         <div className="flex items-center gap-1">
           <InfoButton name={lighthouse.name} description={lighthouse.description ?? null} />
-          <HistoryButton data={historyData} startDate={startDate.toISOString()} />
           <LightButton slug={slug} isLit={isLit} />
+          <HistoryButton litDates={litDates} startDate={startDate.toISOString()} />
         </div>
       </footer>
     </main>

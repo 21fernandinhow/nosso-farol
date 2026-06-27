@@ -1,20 +1,17 @@
 export interface HistoryDay {
   date: string
-  count: number
+  lit: boolean
 }
 
-export const buildHistoryGrid = (
-  apiData: Array<{ _id: string; count: number }>,
-  startDate: Date
-): HistoryDay[] => {
-  const map = new Map(apiData.map((d) => [d._id, d.count]))
+export const buildHistoryGrid = (litDates: string[], startDate: Date): HistoryDay[] => {
+  const set = new Set(litDates)
   const days: HistoryDay[] = []
   const end = new Date()
   const current = new Date(startDate)
 
   while (current <= end) {
     const key = current.toISOString().slice(0, 10)
-    days.push({ date: key, count: map.get(key) ?? 0 })
+    days.push({ date: key, lit: set.has(key) })
     current.setDate(current.getDate() + 1)
   }
 

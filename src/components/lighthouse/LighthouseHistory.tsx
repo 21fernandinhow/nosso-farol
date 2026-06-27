@@ -1,46 +1,49 @@
+"use client"
+
+import { useState } from "react"
 import { buildHistoryGrid } from "@/utils/history"
 
 interface LighthouseHistoryProps {
-  data: Array<{ _id: string; count: number }>
+  litDates: string[]
   startDate: string
 }
 
-const colorClass = (count: number): string => {
-  if (count === 0) return "bg-base-300"
-  if (count === 1) return "bg-primary/40"
-  if (count === 2) return "bg-primary/70"
-  return "bg-primary"
-}
-
-const formatTooltip = (date: string, count: number): string => {
+const formatLabel = (date: string, lit: boolean): string => {
   const d = new Date(date + "T12:00:00Z")
   const formatted = d.toLocaleDateString("pt-BR", {
     day: "numeric",
     month: "long",
     year: "numeric",
   })
-  return `${formatted} · ${count} sinal${count !== 1 ? "is" : ""}`
+  return lit ? `${formatted} · acendeu` : formatted
 }
 
-export const LighthouseHistory = ({ data, startDate }: LighthouseHistoryProps) => {
-  const grid = buildHistoryGrid(data, new Date(startDate))
+export const LighthouseHistory = ({ litDates, startDate }: LighthouseHistoryProps) => {
+  const grid = buildHistoryGrid(litDates, new Date(startDate))
+  const [label, setLabel] = useState<string | null>(null)
 
   return (
-    <div
-      className="grid gap-0.5 overflow-x-auto py-1"
-      style={{
-        gridTemplateRows: "repeat(7, minmax(0, 1fr))",
-        gridAutoFlow: "column",
-        gridAutoColumns: "min-content",
-      }}
-    >
-      {grid.map((day) => (
-        <div
-          key={day.date}
-          className={`tooltip tooltip-top w-3 h-3 rounded-sm ${colorClass(day.count)}`}
-          data-tip={formatTooltip(day.date, day.count)}
-        />
-      ))}
+    <div className="flex flex-col gap-2">
+      <div
+        style={{
+          display: "grid",
+          gridTemplateRows: "repeat(7, 12px)",
+          gridAutoFlow: "column",
+          gridAutoColumns: "12px",
+          gap: "2px",
+          overflowX: "auto",
+        }}
+      >
+        {grid.map((day) => (
+          <div
+            key={day.date}
+            className={`rounded-sm cursor-default ${day.lit ? "bg-primary" : "bg-base-300"}`}
+            onMouseEnter={() => setLabel(formatLabel(day.date, day.lit))}
+            onMouseLeave={() => setLabel(null)}
+          />
+        ))}
+      </div>
+      <p className="text-xs opacity-50 h-4">{label ?? ""}</p>
     </div>
   )
 }

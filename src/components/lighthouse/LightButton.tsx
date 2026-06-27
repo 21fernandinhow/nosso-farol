@@ -49,7 +49,7 @@ export const LightButton = ({ slug, isLit }: LightButtonProps) => {
         title={isLit ? "Farol já aceso" : "Acender o farol"}
         aria-label="Acender o farol"
       >
-        🔥
+        💡
       </button>
 
       <dialog ref={dialogRef} className="modal">
