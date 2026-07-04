@@ -37,6 +37,13 @@ export const POST = async (
       return Response.json({ error: "Senha incorreta." }, { status: 401 })
     }
 
+    const todayUTC = new Date()
+    todayUTC.setUTCHours(0, 0, 0, 0)
+
+    if (lighthouse.isLit && lighthouse.litAt && lighthouse.litAt >= todayUTC) {
+      return Response.json({ error: "O farol já está aceso hoje." }, { status: 409 })
+    }
+
     lighthouse.isLit = true
     lighthouse.litAt = new Date()
     await lighthouse.save()

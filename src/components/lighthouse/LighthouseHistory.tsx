@@ -15,7 +15,7 @@ const formatLabel = (date: string, lit: boolean): string => {
     month: "long",
     year: "numeric",
   })
-  return lit ? `${formatted} · acendeu` : formatted
+  return `${formatted} ·${lit ? " acendeu" : " não acendeu"}`
 }
 
 export const LighthouseHistory = ({ litDates, startDate }: LighthouseHistoryProps) => {

@@ -40,7 +40,9 @@ const LighthousePage = async ({ params }: PageProps) => {
   if (!lighthouse) notFound()
 
   if (lighthouse.isLit && lighthouse.litAt) {
-    if (Date.now() - lighthouse.litAt.getTime() > 24 * 60 * 60 * 1000) {
+    const todayUTC = new Date()
+    todayUTC.setUTCHours(0, 0, 0, 0)
+    if (lighthouse.litAt < todayUTC) {
       lighthouse.isLit = false
       await lighthouse.save()
     }
