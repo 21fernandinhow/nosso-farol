@@ -1,15 +1,18 @@
 "use client"
 
-import { useRef, useState } from "react"
+import { useCallback, useRef, useState, type SyntheticEvent } from "react"
 import { CreatedSuccess } from "./CreatedSuccess"
+import { SlugField } from "./SlugField"
 
-type State = "idle" | "loading" | "error"
+type State = "idle" | "loading" | "error" | "slug-taken"
 
 export const CreateForm = () => {
   const dialogRef = useRef<HTMLDialogElement>(null)
   const [name, setName] = useState("")
   const [password, setPassword] = useState("")
   const [description, setDescription] = useState("")
+  const [customSlug, setCustomSlug] = useState("")
+  const [slugAvailable, setSlugAvailable] = useState<boolean | null>(null)
   const [state, setState] = useState<State>("idle")
   const [createdSlug, setCreatedSlug] = useState<string | null>(null)
   const [createdName, setCreatedName] = useState<string | null>(null)
@@ -18,14 +21,26 @@ export const CreateForm = () => {
     setName("")
     setPassword("")
     setDescription("")
+    setCustomSlug("")
+    setSlugAvailable(null)
     setState("idle")
     setCreatedSlug(null)
     setCreatedName(null)
     dialogRef.current?.showModal()
   }
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleAvailabilityChange = useCallback((available: boolean | null) => {
+    setSlugAvailable(available)
+  }, [])
+
+  const handleSubmit = async (e: SyntheticEvent<HTMLFormElement>) => {
     e.preventDefault()
+
+    if (slugAvailable === false) {
+      setState("slug-taken")
+      return
+    }
+
     setState("loading")
 
     const res = await fetch("/api/lighthouses", {
@@ -35,6 +50,7 @@ export const CreateForm = () => {
         name,
         password,
         description: description.trim() || null,
+        customSlug,
       }),
     })
 
@@ -42,10 +58,15 @@ export const CreateForm = () => {
       const data = await res.json()
       setCreatedSlug(data.slug)
       setCreatedName(data.name)
+    } else if (res.status === 409) {
+      setState("slug-taken")
     } else {
       setState("error")
     }
   }
+
+  const submitDisabled =
+    state === "loading" || !customSlug || slugAvailable !== true
 
   return (
     <>
@@ -79,6 +100,12 @@ export const CreateForm = () => {
                   />
                 </div>
 
+                <SlugField
+                  value={customSlug}
+                  onChange={setCustomSlug}
+                  onAvailabilityChange={handleAvailabilityChange}
+                />
+
                 <div className="flex flex-col gap-1">
                   <label className="text-sm opacity-70">Senha</label>
                   <input
@@ -107,6 +134,9 @@ export const CreateForm = () => {
                   />
                 </div>
 
+                {state === "slug-taken" && (
+                  <p className="text-error text-sm">Esta URL já está em uso.</p>
+                )}
                 {state === "error" && (
                   <p className="text-error text-sm">Algo deu errado. Tente novamente.</p>
                 )}
@@ -122,7 +152,7 @@ export const CreateForm = () => {
                   <button
                     type="submit"
                     className="btn btn-primary"
-                    disabled={state === "loading"}
+                    disabled={submitDisabled}
                   >
                     {state === "loading" ? (
                       <span className="loading loading-spinner loading-sm" />

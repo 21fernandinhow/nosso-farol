@@ -7,7 +7,13 @@ import { z } from "zod"
 const schema = z.object({
   name: z.string().min(1).max(80).trim(),
   description: z.string().max(256).trim().nullable().optional(),
-  password: z.string().min(4),
+  password: z.string().min(4).max(128),
+  customSlug: z
+    .string()
+    .min(3)
+    .max(40)
+    .regex(/^[a-z0-9-]+$/)
+    .optional(),
 })
 
 export const POST = async (request: Request) => {
@@ -21,8 +27,19 @@ export const POST = async (request: Request) => {
       return Response.json({ error: "Dados inválidos." }, { status: 400 })
     }
 
-    const { name, description, password } = result.data
-    const slug = await generateUniqueSlug(name)
+    const { name, description, password, customSlug } = result.data
+
+    let slug: string
+    if (customSlug) {
+      const taken = await Lighthouse.exists({ slug: customSlug })
+      if (taken) {
+        return Response.json({ error: "Esta URL já está em uso." }, { status: 409 })
+      }
+      slug = customSlug
+    } else {
+      slug = await generateUniqueSlug(name)
+    }
+
     const passwordHash = await bcrypt.hash(password, 12)
 
     await Lighthouse.create({ name, description: description ?? null, slug, passwordHash })

@@ -22,7 +22,7 @@ export const LightButton = ({ slug, isLit }: LightButtonProps) => {
     dialogRef.current?.showModal()
   }
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.SyntheticEvent<HTMLFormElement>) => {
     e.preventDefault()
     setState("loading")
 
