@@ -44,11 +44,11 @@ export const LightButton = ({ slug, isLit }: LightButtonProps) => {
   return (
     <>
       <button
-        className="btn btn-ghost btn-circle"
+        className="btn btn-ghost btn-circle tooltip tooltip-top"
+        data-tip={"Acender o farol"}
         onClick={handleOpen}
         disabled={isLit}
-        title={isLit ? "Farol já aceso" : "Acender o farol"}
-        aria-label="Acender o farol"
+        aria-label={"Acender o farol"}
       >
         <LuFlame size={20} />
       </button>

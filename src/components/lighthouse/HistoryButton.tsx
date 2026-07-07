@@ -15,9 +15,9 @@ export const HistoryButton = ({ litDates, startDate }: HistoryButtonProps) => {
   return (
     <>
       <button
-        className="btn btn-ghost btn-circle"
+        className="btn btn-ghost btn-circle tooltip tooltip-top"
+        data-tip="Histórico de sinais"
         onClick={() => dialogRef.current?.showModal()}
-        title="Histórico de sinais"
         aria-label="Histórico de sinais"
       >
         <LuCalendarDays size={20} />

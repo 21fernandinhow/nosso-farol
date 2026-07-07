@@ -36,9 +36,9 @@ export const SaveButton = ({ slug, name }: SaveButtonProps) => {
   return (
     <button
       onClick={handleToggle}
-      className={`btn btn-ghost btn-circle${saved ? " text-primary" : ""}`}
-      title={saved ? "Remover dos meus faróis" : "Salvar nos meus faróis"}
-      aria-label={saved ? "Remover dos meus faróis" : "Salvar nos meus faróis"}
+      className={`btn btn-ghost btn-circle tooltip tooltip-top${saved ? " text-primary" : ""}`}
+      data-tip={saved ? "Remover" : "Salvar"}
+      aria-label={saved ? "Remover" : "Salvar"}
     >
       {saved ? <LuBookmarkCheck size={20} /> : <LuBookmark size={20} />}
     </button>

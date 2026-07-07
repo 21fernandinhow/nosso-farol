@@ -14,9 +14,9 @@ export const InfoButton = ({ name, description }: InfoButtonProps) => {
   return (
     <>
       <button
-        className="btn btn-ghost btn-circle"
+        className="btn btn-ghost btn-circle tooltip tooltip-top"
+        data-tip="Sobre este farol"
         onClick={() => dialogRef.current?.showModal()}
-        title="Sobre este farol"
         aria-label="Sobre este farol"
       >
         <LuInfo size={20} />
