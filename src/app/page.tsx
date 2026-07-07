@@ -1,5 +1,6 @@
 import { CreateForm } from "@/components/create/CreateForm"
 import { LighthouseIcon } from "@/components/lighthouse/LighthouseIcon"
+import { MyLighthouses } from "@/components/home/MyLighthouses"
 
 const HomePage = () => {
   return (
@@ -9,6 +10,7 @@ const HomePage = () => {
           <h1 className="font-serif text-4xl sm:text-5xl font-bold">Nosso Farol</h1>
 
           <div className="flex flex-col gap-5 text-base-content/70 leading-relaxed">
+            
             <p>
               Existem pessoas que continuam iluminando um pedaço da nossa história,
               mesmo à distância.
@@ -33,6 +35,8 @@ const HomePage = () => {
           </div>
 
           <CreateForm />
+          <MyLighthouses />
+
         </div>
       </div>
 

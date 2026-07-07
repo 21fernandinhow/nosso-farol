@@ -2,6 +2,7 @@
 
 import { useRef, useState } from "react"
 import { useRouter } from "next/navigation"
+import { LuFlame } from "react-icons/lu"
 
 interface LightButtonProps {
   slug: string
@@ -43,13 +44,13 @@ export const LightButton = ({ slug, isLit }: LightButtonProps) => {
   return (
     <>
       <button
-        className="btn btn-ghost btn-circle text-xl"
+        className="btn btn-ghost btn-circle"
         onClick={handleOpen}
         disabled={isLit}
         title={isLit ? "Farol já aceso" : "Acender o farol"}
         aria-label="Acender o farol"
       >
-        💡
+        <LuFlame size={20} />
       </button>
 
       <dialog ref={dialogRef} className="modal">

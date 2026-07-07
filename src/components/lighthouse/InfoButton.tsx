@@ -1,6 +1,7 @@
 "use client"
 
 import { useRef } from "react"
+import { LuInfo } from "react-icons/lu"
 
 interface InfoButtonProps {
   name: string
@@ -13,12 +14,12 @@ export const InfoButton = ({ name, description }: InfoButtonProps) => {
   return (
     <>
       <button
-        className="btn btn-ghost btn-circle text-xl"
+        className="btn btn-ghost btn-circle"
         onClick={() => dialogRef.current?.showModal()}
         title="Sobre este farol"
         aria-label="Sobre este farol"
       >
-        ℹ️
+        <LuInfo size={20} />
       </button>
 
       <dialog ref={dialogRef} className="modal">

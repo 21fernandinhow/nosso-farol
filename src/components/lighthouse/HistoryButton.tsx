@@ -1,6 +1,7 @@
 "use client"
 
 import { useRef } from "react"
+import { LuCalendarDays } from "react-icons/lu"
 import { LighthouseHistory } from "./LighthouseHistory"
 
 interface HistoryButtonProps {
@@ -14,12 +15,12 @@ export const HistoryButton = ({ litDates, startDate }: HistoryButtonProps) => {
   return (
     <>
       <button
-        className="btn btn-ghost btn-circle text-xl"
+        className="btn btn-ghost btn-circle"
         onClick={() => dialogRef.current?.showModal()}
         title="Histórico de sinais"
         aria-label="Histórico de sinais"
       >
-        📜
+        <LuCalendarDays size={20} />
       </button>
 
       <dialog ref={dialogRef} className="modal">

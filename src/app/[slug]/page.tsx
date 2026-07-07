@@ -9,6 +9,7 @@ import { LighthouseStatus } from "@/components/lighthouse/LighthouseStatus"
 import { LightButton } from "@/components/lighthouse/LightButton"
 import { InfoButton } from "@/components/lighthouse/InfoButton"
 import { HistoryButton } from "@/components/lighthouse/HistoryButton"
+import { SaveButton } from "@/components/lighthouse/SaveButton"
 
 export const revalidate = 60
 
@@ -77,6 +78,7 @@ const LighthousePage = async ({ params }: PageProps) => {
             <InfoButton name={lighthouse.name} description={lighthouse.description ?? null} />
             <LightButton slug={slug} isLit={isLit} />
             <HistoryButton litDates={litDates} startDate={startDate.toISOString()} />
+            <SaveButton slug={slug} name={lighthouse.name} />
           </div>
         </footer>
       </div>
