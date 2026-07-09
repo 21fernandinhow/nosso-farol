@@ -1,3 +1,4 @@
+import { revalidatePath } from "next/cache"
 import { connectDB } from "@/lib/mongodb"
 import { Lighthouse } from "@/models/Lighthouse"
 import { Signal } from "@/models/Signal"
@@ -49,6 +50,8 @@ export const POST = async (
     await lighthouse.save()
 
     await Signal.create({ lighthouseId: lighthouse._id })
+
+    revalidatePath(`/${slug}`)
 
     return Response.json({ isLit: true, litAt: lighthouse.litAt.toISOString() })
   } catch (error) {

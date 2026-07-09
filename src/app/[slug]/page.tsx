@@ -10,8 +10,9 @@ import { LightButton } from "@/components/lighthouse/LightButton"
 import { InfoButton } from "@/components/lighthouse/InfoButton"
 import { HistoryButton } from "@/components/lighthouse/HistoryButton"
 import { SaveButton } from "@/components/lighthouse/SaveButton"
+import { StaleGuard } from "@/components/lighthouse/StaleGuard"
 
-export const revalidate = 60
+export const revalidate = 86400
 
 interface PageProps {
   params: Promise<{ slug: string }>
@@ -88,6 +89,7 @@ const LighthousePage = async ({ params }: PageProps) => {
           O que é o Nosso Farol?
         </Link>
       </div>
+      <StaleGuard isLit={isLit} litAt={litAt} slug={slug} />
     </main>
   )
 }
