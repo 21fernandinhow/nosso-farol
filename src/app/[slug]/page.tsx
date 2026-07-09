@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation"
 import Link from "next/link"
 import type { Metadata } from "next"
+import { cache } from "react"
 import { connectDB } from "@/lib/mongodb"
 import { Lighthouse } from "@/models/Lighthouse"
 import { Signal } from "@/models/Signal"
@@ -19,10 +20,14 @@ interface PageProps {
   params: Promise<{ slug: string }>
 }
 
-export const generateMetadata = async ({ params }: PageProps): Promise<Metadata> => {
+const getLighthouse = cache(async (slug: string) => {
   await connectDB()
+  return Lighthouse.findOne({ slug })
+})
+
+export const generateMetadata = async ({ params }: PageProps): Promise<Metadata> => {
   const { slug } = await params
-  const lighthouse = await Lighthouse.findOne({ slug })
+  const lighthouse = await getLighthouse(slug)
   if (!lighthouse) return { title: "Farol não encontrado — Nosso Farol" }
   return {
     title: `${lighthouse.name} — Nosso Farol`,
@@ -36,10 +41,9 @@ export const generateMetadata = async ({ params }: PageProps): Promise<Metadata>
 }
 
 const LighthousePage = async ({ params }: PageProps) => {
-  await connectDB()
   const { slug } = await params
 
-  const lighthouse = await Lighthouse.findOne({ slug })
+  const lighthouse = await getLighthouse(slug)
   if (!lighthouse) notFound()
 
   const startDate = lighthouse.createdAt
