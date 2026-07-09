@@ -1,7 +1,6 @@
 "use client"
 
 import { useRef, useState } from "react"
-import { useRouter } from "next/navigation"
 import { LuFlame } from "react-icons/lu"
 import { useLighthouseState } from "@/context/LighthouseStateContext"
 
@@ -10,7 +9,7 @@ interface LightButtonProps {
   isLit: boolean
 }
 
-type State = "idle" | "loading" | "error"
+type State = "idle" | "loading" | "error" | "generic-error"
 
 export const LightButton = ({ slug, isLit: isLitProp }: LightButtonProps) => {
   const ctx = useLighthouseState()
@@ -18,7 +17,6 @@ export const LightButton = ({ slug, isLit: isLitProp }: LightButtonProps) => {
   const dialogRef = useRef<HTMLDialogElement>(null)
   const [password, setPassword] = useState("")
   const [state, setState] = useState<State>("idle")
-  const router = useRouter()
 
   const handleOpen = () => {
     setPassword("")
@@ -36,11 +34,13 @@ export const LightButton = ({ slug, isLit: isLitProp }: LightButtonProps) => {
       body: JSON.stringify({ password }),
     })
 
-    if (res.ok) {
+    if (res.ok || res.status === 409) {
       dialogRef.current?.close()
-      router.refresh()
-    } else {
+      ctx?.setLit(true)
+    } else if (res.status === 401) {
       setState("error")
+    } else {
+      setState("generic-error")
     }
   }
 
@@ -72,6 +72,9 @@ export const LightButton = ({ slug, isLit: isLitProp }: LightButtonProps) => {
             />
             {state === "error" && (
               <p className="text-error text-sm mt-2">Senha incorreta.</p>
+            )}
+            {state === "generic-error" && (
+              <p className="text-error text-sm mt-2">Erro ao acender. Tente novamente.</p>
             )}
             <div className="modal-action">
               <button

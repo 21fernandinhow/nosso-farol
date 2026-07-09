@@ -6,7 +6,8 @@ export const formatStatus = (isLit: boolean, litAt: string | null): string => {
     if (days === 1) return "Último sinal ontem"
     return `Último sinal há ${days} dias`
   }
-  const minutes = Math.floor((Date.now() - new Date(litAt!).getTime()) / 60000)
+  if (!litAt) return "Acabou de acender"
+  const minutes = Math.floor((Date.now() - new Date(litAt).getTime()) / 60000)
   if (minutes < 1) return "Acabou de acender"
   if (minutes < 60) return `Aceso há ${minutes} minuto${minutes !== 1 ? "s" : ""}`
   const hours = Math.floor(minutes / 60)

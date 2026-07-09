@@ -1,9 +1,10 @@
 "use client"
-import { createContext, useContext, useEffect } from "react"
+import { createContext, useContext, useEffect, useState } from "react"
 import { revalidateLighthouse } from "@/actions/revalidateLighthouse"
 
 interface LighthouseState {
   effectiveIsLit: boolean
+  setLit: (lit: boolean) => void
 }
 
 const LighthouseStateContext = createContext<LighthouseState | null>(null)
@@ -23,15 +24,18 @@ export const LighthouseStateProvider = ({
 }) => {
   const todayLocal = new Date()
   todayLocal.setHours(0, 0, 0, 0)
-  const effectiveIsLit = isLit && litAt ? new Date(litAt) >= todayLocal : isLit
+  const computedIsLit = isLit && litAt ? new Date(litAt) >= todayLocal : isLit
+
+  const [manualOverride, setManualOverride] = useState<boolean | null>(null)
+  const effectiveIsLit = manualOverride !== null ? manualOverride : computedIsLit
 
   useEffect(() => {
-    if (!isLit || effectiveIsLit) return
+    if (!isLit || computedIsLit) return
     revalidateLighthouse(slug)
   }, [])
 
   return (
-    <LighthouseStateContext.Provider value={{ effectiveIsLit }}>
+    <LighthouseStateContext.Provider value={{ effectiveIsLit, setLit: setManualOverride }}>
       {children}
     </LighthouseStateContext.Provider>
   )
