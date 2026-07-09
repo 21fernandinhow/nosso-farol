@@ -6,11 +6,12 @@ import { Lighthouse } from "@/models/Lighthouse"
 import { Signal } from "@/models/Signal"
 import { LighthouseDisplay } from "@/components/lighthouse/LighthouseDisplay"
 import { LighthouseStatus } from "@/components/lighthouse/LighthouseStatus"
+import { LighthouseTitle } from "@/components/lighthouse/LighthouseTitle"
 import { LightButton } from "@/components/lighthouse/LightButton"
 import { InfoButton } from "@/components/lighthouse/InfoButton"
 import { HistoryButton } from "@/components/lighthouse/HistoryButton"
 import { SaveButton } from "@/components/lighthouse/SaveButton"
-import { StaleGuard } from "@/components/lighthouse/StaleGuard"
+import { LighthouseStateProvider } from "@/context/LighthouseStateContext"
 
 export const revalidate = 86400
 
@@ -64,32 +65,33 @@ const LighthousePage = async ({ params }: PageProps) => {
 
   return (
     <main className="flex flex-col">
-      <div className="min-h-screen flex flex-col">
-        <header className="flex items-center justify-center px-6 pt-10 pb-2">
-          <h1 className={`font-serif text-4xl text-center transition-colors duration-700${isLit ? " text-[#fde68a]" : ""}`}>{lighthouse.name}</h1>
-        </header>
+      <LighthouseStateProvider isLit={isLit} litAt={litAt} slug={slug}>
+        <div className="min-h-screen flex flex-col">
+          <header className="flex items-center justify-center px-6 pt-10 pb-2">
+            <LighthouseTitle name={lighthouse.name} isLit={isLit} />
+          </header>
 
-        <section className="flex-1 flex items-center justify-center px-4">
-          <LighthouseDisplay isLit={isLit} />
-        </section>
+          <section className="flex-1 flex items-center justify-center px-4">
+            <LighthouseDisplay isLit={isLit} />
+          </section>
 
-        <footer className="flex items-center justify-between px-4 sm:px-6 py-4">
-          <LighthouseStatus isLit={isLit} litAt={litAt} />
-          <div className="flex items-center gap-1 flex-shrink-0 ml-2">
-            <InfoButton name={lighthouse.name} description={lighthouse.description ?? null} />
-            <LightButton slug={slug} isLit={isLit} />
-            <HistoryButton litDates={litDates} startDate={startDate.toISOString()} />
-            <SaveButton slug={slug} name={lighthouse.name} />
-          </div>
-        </footer>
-      </div>
+          <footer className="flex items-center justify-between px-4 sm:px-6 py-4">
+            <LighthouseStatus isLit={isLit} litAt={litAt} />
+            <div className="flex items-center gap-1 flex-shrink-0 ml-2">
+              <InfoButton name={lighthouse.name} description={lighthouse.description ?? null} />
+              <LightButton slug={slug} isLit={isLit} />
+              <HistoryButton litDates={litDates} startDate={startDate.toISOString()} />
+              <SaveButton slug={slug} name={lighthouse.name} />
+            </div>
+          </footer>
+        </div>
 
-      <div className="text-center px-6 py-3 bg-base-200">
-        <Link href="/" className="text-xs text-base-content/30 hover:text-base-content/60 transition-colors">
-          O que é o Nosso Farol?
-        </Link>
-      </div>
-      <StaleGuard isLit={isLit} litAt={litAt} slug={slug} />
+        <div className="text-center px-6 py-3 bg-base-200">
+          <Link href="/" className="text-xs text-base-content/30 hover:text-base-content/60 transition-colors">
+            O que é o Nosso Farol?
+          </Link>
+        </div>
+      </LighthouseStateProvider>
     </main>
   )
 }

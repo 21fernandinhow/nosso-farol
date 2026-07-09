@@ -3,6 +3,7 @@
 import { useRef, useState } from "react"
 import { useRouter } from "next/navigation"
 import { LuFlame } from "react-icons/lu"
+import { useLighthouseState } from "@/context/LighthouseStateContext"
 
 interface LightButtonProps {
   slug: string
@@ -11,7 +12,9 @@ interface LightButtonProps {
 
 type State = "idle" | "loading" | "error"
 
-export const LightButton = ({ slug, isLit }: LightButtonProps) => {
+export const LightButton = ({ slug, isLit: isLitProp }: LightButtonProps) => {
+  const ctx = useLighthouseState()
+  const isLit = ctx?.effectiveIsLit ?? isLitProp
   const dialogRef = useRef<HTMLDialogElement>(null)
   const [password, setPassword] = useState("")
   const [state, setState] = useState<State>("idle")

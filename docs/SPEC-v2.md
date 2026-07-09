@@ -15,7 +15,8 @@
 4. [Fase C — Compartilhar Nativo](#4-fase-c--compartilhar-nativo)
 5. [Fase D — Proteções de Segurança](#5-fase-d--proteções-de-segurança)
 6. [Fase E — OG Image Dinâmica](#6-fase-e--og-image-dinâmica)
-7. [Dependências Novas](#7-dependências-novas)
+7. [Fase F — Instalar como App](#7-fase-f--instalar-como-app)
+8. [Dependências Novas](#8-dependências-novas)
 
 ---
 
@@ -30,6 +31,7 @@ Melhorias incrementais sobre o MVP. Cada fase é independente e pode ser impleme
 | C | Compartilhar nativo (Web Share API) | Distribuição |
 | D | Proteções de segurança | Confiabilidade |
 | E | OG image dinâmica | Engajamento social |
+| F | Instalar como App (PWA) | Distribuição / retenção mobile |
 
 ---
 
@@ -353,7 +355,79 @@ return {
 
 ---
 
-## 7. Dependências Novas
+## 7. Fase F — Instalar como App
+
+### Motivação
+
+O Nosso Farol tem UX contemplativa e tela cheia — funciona muito melhor instalado na tela inicial do que dentro do browser. Usuários mobile raramente sabem que podem instalar; um botão sutil e oportuno aumenta a taxa de instalação sem ser intrusivo.
+
+### Comportamento
+
+- Botão flutuante, visível **apenas em mobile** (`md:hidden`)
+- Não exibido se já estiver rodando em modo standalone (`display-mode: standalone`) — usuário já instalou
+- Não exibido se o usuário já dispensou o prompt (flag em localStorage: `"nosso-farol:install-dismissed"`)
+- Abre um modal com instruções de instalação adequadas ao sistema detectado
+
+### Posicionamento
+
+`position: fixed`, alinhado ao canto inferior direito. A distância vertical deve ser suficiente para não sobrepor os botões da página de farol (footer com InfoButton / LightButton / HistoryButton / SaveButton + texto de status):
+
+```
+bottom-24   → ~6rem do fundo, acima da área de botões
+right-4
+```
+
+O botão deve ter aparência discreta em repouso — pequeno, semi-transparente (`opacity-70`) — e revelar-se ao hover/focus (`opacity-100`), transmitindo presença sem agressividade.
+
+### Ícone
+
+`LuSmartphone` (react-icons/lu), tamanho 18. Envolvido em um `btn btn-circle btn-sm` com `bg-base-200 shadow-md`. Sem label de texto — o modal explica a ação.
+
+### Modal — conteúdo por plataforma
+
+Detectado via `navigator.userAgent` no `useEffect`:
+
+**iOS (Safari):**
+```
+Para instalar, toque em  [ícone share]  na barra do Safari
+e selecione "Adicionar à Tela de Início".
+```
+
+**Android (Chrome/Samsung):**
+```
+Toque em  ⋮  no canto do browser
+e selecione "Adicionar à tela inicial".
+```
+
+**Outro / não detectado:**
+```
+No seu browser, abra o menu e procure por
+"Adicionar à tela inicial" ou "Instalar app".
+```
+
+Se o evento `beforeinstallprompt` estiver disponível (Chrome Android), o modal exibe um botão "Instalar" que dispara o prompt nativo do browser diretamente — experiência mais fluida.
+
+### Componente
+
+`InstallButton` (Client Component) — `src/components/shared/InstallButton.tsx`
+
+- Lê `window.matchMedia`, `navigator.userAgent` e localStorage no `useEffect` para decidir se renderiza
+- Renderiza `null` até hidratar (evita mismatch)
+- Escuta `beforeinstallprompt` e armazena o evento para uso posterior
+- Botão de dispensar ("agora não") dentro do modal salva o flag no localStorage
+
+### Onde incluir
+
+Qualquer página que o usuário possa querer instalar — inicialmente:
+
+- `src/app/page.tsx` (homepage)
+- `src/app/[slug]/page.tsx` (página do farol)
+
+Como Client Component que renderiza `null` antes de hidratar, não afeta SSR nem o cache ISR.
+
+---
+
+## 8. Dependências Novas
 
 | Pacote | Fase | Motivo |
 |---|---|---|
@@ -361,7 +435,7 @@ return {
 | `@upstash/redis` | D | Driver Redis para Upstash |
 | `@vercel/og` | E | Geração de imagem OG no Edge |
 
-As fases A, B e C não adicionam dependências.
+As fases A, B, C e F não adicionam dependências.
 
 ---
 
@@ -369,11 +443,12 @@ As fases A, B e C não adicionam dependências.
 
 As fases são independentes, mas esta ordem minimiza retrabalho:
 
-1. **A** (slug personalizado) — muda a criação; melhor fazer cedo antes de ter muitos farois criados
-2. **D** (segurança) — antes de promover o produto amplamente
-3. **B** (meus faróis) — feature de retorno, pode ir junto com D
-4. **C** (compartilhar) — pequena, vai junto com B
-5. **E** (OG dinâmica) — último pois depende de setup Vercel OG e impacta só o social sharing
+1. ~~**A** (slug personalizado)~~ — ✅ implementado
+2. ~~**B** (meus faróis)~~ — ✅ implementado
+3. **F** (instalar como app) — próxima; sem dependências, alto impacto mobile
+4. **C** (compartilhar) — vai bem junto com F (ambas melhoram distribuição mobile)
+5. **D** (segurança) — antes de promover o produto amplamente
+6. **E** (OG dinâmica) — último pois depende de setup Vercel OG e impacta só o social sharing
 
 ---
 
