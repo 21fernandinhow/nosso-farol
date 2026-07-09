@@ -5,7 +5,6 @@ export interface ILighthouse extends Document {
   slug: string
   description: string | null
   passwordHash: string
-  isLit: boolean
   litAt: Date | null
   createdAt: Date
   updatedAt: Date
@@ -36,10 +35,6 @@ const LighthouseSchema = new Schema<ILighthouse>(
       type: String,
       required: true,
       select: false,
-    },
-    isLit: {
-      type: Boolean,
-      default: false,
     },
     litAt: {
       type: Date,

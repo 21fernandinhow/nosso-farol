@@ -1,14 +1,9 @@
 "use client"
 import { useLighthouseState } from "@/context/LighthouseStateContext"
 
-interface LighthouseDisplayProps {
-  isLit: boolean
-  className?: string
-}
-
-export const LighthouseDisplay = ({ isLit: isLitProp, className }: LighthouseDisplayProps) => {
-  const ctx = useLighthouseState()
-  const isLit = ctx?.effectiveIsLit ?? isLitProp
+export const LighthouseDisplay = ({ className, isLit: fallback }: { className?: string; isLit?: boolean }) => {
+  const context = useLighthouseState()
+  const isLit = context?.effectiveIsLit ?? fallback ?? false
   return (
     <svg
       viewBox="-22 0 124 200"

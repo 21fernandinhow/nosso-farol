@@ -4,15 +4,11 @@ import { useState, useEffect } from "react"
 import { formatStatus } from "@/utils/time"
 import { useLighthouseState } from "@/context/LighthouseStateContext"
 
-interface LighthouseStatusProps {
-  isLit: boolean
-  litAt: string | null
-}
-
-export const LighthouseStatus = ({ isLit: isLitProp, litAt }: LighthouseStatusProps) => {
-  const ctx = useLighthouseState()
-  const isLit = ctx?.effectiveIsLit ?? isLitProp
-  const [text, setText] = useState(() => formatStatus(isLit, litAt))
+export const LighthouseStatus = () => {
+  const context = useLighthouseState()
+  const isLit = context?.effectiveIsLit ?? false
+  const litAt = context?.effectiveLitAt ?? null
+  const [text, setText] = useState(() => formatStatus(false, litAt))
 
   useEffect(() => {
     setText(formatStatus(isLit, litAt))

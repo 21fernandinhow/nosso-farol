@@ -42,15 +42,6 @@ const LighthousePage = async ({ params }: PageProps) => {
   const lighthouse = await Lighthouse.findOne({ slug })
   if (!lighthouse) notFound()
 
-  if (lighthouse.isLit && lighthouse.litAt) {
-    const todayUTC = new Date()
-    todayUTC.setUTCHours(0, 0, 0, 0)
-    if (lighthouse.litAt < todayUTC) {
-      lighthouse.isLit = false
-      await lighthouse.save()
-    }
-  }
-
   const startDate = lighthouse.createdAt
 
   const historyRaw = await Signal.aggregate<{ _id: string }>([
@@ -60,26 +51,25 @@ const LighthousePage = async ({ params }: PageProps) => {
   ])
   const litDates = historyRaw.map((d) => d._id)
 
-  const isLit = lighthouse.isLit
   const litAt = lighthouse.litAt?.toISOString() ?? null
 
   return (
     <main className="flex flex-col">
-      <LighthouseStateProvider isLit={isLit} litAt={litAt} slug={slug}>
+      <LighthouseStateProvider litAt={litAt}>
         <div className="min-h-screen flex flex-col">
           <header className="flex items-center justify-center px-6 pt-10 pb-2">
-            <LighthouseTitle name={lighthouse.name} isLit={isLit} />
+            <LighthouseTitle name={lighthouse.name} />
           </header>
 
           <section className="flex-1 flex items-center justify-center px-4">
-            <LighthouseDisplay isLit={isLit} />
+            <LighthouseDisplay />
           </section>
 
           <footer className="flex items-center justify-between px-4 sm:px-6 py-4">
-            <LighthouseStatus isLit={isLit} litAt={litAt} />
+            <LighthouseStatus />
             <div className="flex items-center gap-1 flex-shrink-0 ml-2">
               <InfoButton name={lighthouse.name} description={lighthouse.description ?? null} />
-              <LightButton slug={slug} isLit={isLit} />
+              <LightButton slug={slug} />
               <HistoryButton litDates={litDates} startDate={startDate.toISOString()} />
               <SaveButton slug={slug} name={lighthouse.name} />
             </div>

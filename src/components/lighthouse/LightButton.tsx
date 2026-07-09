@@ -6,14 +6,13 @@ import { useLighthouseState } from "@/context/LighthouseStateContext"
 
 interface LightButtonProps {
   slug: string
-  isLit: boolean
 }
 
 type State = "idle" | "loading" | "error" | "generic-error"
 
-export const LightButton = ({ slug, isLit: isLitProp }: LightButtonProps) => {
-  const ctx = useLighthouseState()
-  const isLit = ctx?.effectiveIsLit ?? isLitProp
+export const LightButton = ({ slug }: LightButtonProps) => {
+  const context = useLighthouseState()
+  const isLit = context?.effectiveIsLit ?? false
   const dialogRef = useRef<HTMLDialogElement>(null)
   const [password, setPassword] = useState("")
   const [state, setState] = useState<State>("idle")
@@ -31,12 +30,13 @@ export const LightButton = ({ slug, isLit: isLitProp }: LightButtonProps) => {
     const res = await fetch(`/api/lighthouses/${slug}/signal`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ password }),
+      body: JSON.stringify({ password, tz: new Date().getTimezoneOffset() }),
     })
 
     if (res.ok || res.status === 409) {
+      const data = await res.json()
       dialogRef.current?.close()
-      ctx?.setLit(true)
+      context?.setLit(true, data.litAt)
     } else if (res.status === 401) {
       setState("error")
     } else {

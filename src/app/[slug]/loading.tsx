@@ -15,6 +15,7 @@ const LighthousePageSkeleton = () => (
           <div className="skeleton w-10 h-10 rounded-full" />
           <div className="skeleton w-10 h-10 rounded-full" />
           <div className="skeleton w-10 h-10 rounded-full" />
+          <div className="skeleton w-10 h-10 rounded-full" />
         </div>
       </footer>
     </div>

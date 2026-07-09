@@ -7,6 +7,7 @@ import { z } from "zod"
 
 const schema = z.object({
   password: z.string().min(1),
+  tz: z.number().int().optional(),
 })
 
 export const POST = async (
@@ -24,7 +25,7 @@ export const POST = async (
       return Response.json({ error: "Dados inválidos." }, { status: 400 })
     }
 
-    const { password } = result.data
+    const { password, tz = 0 } = result.data
 
     const lighthouse = await Lighthouse.findOne({ slug }).select("+passwordHash")
 
@@ -38,14 +39,17 @@ export const POST = async (
       return Response.json({ error: "Senha incorreta." }, { status: 401 })
     }
 
-    const todayUTC = new Date()
-    todayUTC.setUTCHours(0, 0, 0, 0)
+    // Compute today's midnight in the user's local timezone.
+    // tz = getTimezoneOffset() = minutes west of UTC (e.g. Brazil UTC-3 → tz=180).
+    const now = new Date()
+    const localNow = new Date(now.getTime() - tz * 60 * 1000)
+    localNow.setUTCHours(0, 0, 0, 0)
+    const todayLocal = new Date(localNow.getTime() + tz * 60 * 1000)
 
-    if (lighthouse.isLit && lighthouse.litAt && lighthouse.litAt >= todayUTC) {
-      return Response.json({ error: "O farol já está aceso hoje." }, { status: 409 })
+    if (lighthouse.litAt && lighthouse.litAt >= todayLocal) {
+      return Response.json({ error: "O farol já está aceso hoje.", litAt: lighthouse.litAt.toISOString() }, { status: 409 })
     }
 
-    lighthouse.isLit = true
     lighthouse.litAt = new Date()
     await lighthouse.save()
 
