@@ -13,7 +13,7 @@ import { HistoryButton } from "@/components/lighthouse/HistoryButton"
 import { SaveButton } from "@/components/lighthouse/SaveButton"
 import { LighthouseStateProvider } from "@/context/LighthouseStateContext"
 
-export const revalidate = 86400
+export const revalidate = false
 
 interface PageProps {
   params: Promise<{ slug: string }>
