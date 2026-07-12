@@ -4,7 +4,6 @@ import type { Metadata } from "next"
 import { cache } from "react"
 import { connectDB } from "@/lib/mongodb"
 import { Lighthouse } from "@/models/Lighthouse"
-import { Signal } from "@/models/Signal"
 import { LighthouseDisplay } from "@/components/lighthouse/LighthouseDisplay"
 import { LighthouseStatus } from "@/components/lighthouse/LighthouseStatus"
 import { LighthouseTitle } from "@/components/lighthouse/LighthouseTitle"
@@ -46,15 +45,6 @@ const LighthousePage = async ({ params }: PageProps) => {
   const lighthouse = await getLighthouse(slug)
   if (!lighthouse) notFound()
 
-  const startDate = lighthouse.createdAt
-
-  const historyRaw = await Signal.aggregate<{ _id: string }>([
-    { $match: { lighthouseId: lighthouse._id, createdAt: { $gte: startDate } } },
-    { $group: { _id: { $dateToString: { format: "%Y-%m-%d", date: "$createdAt" } } } },
-    { $sort: { _id: 1 } },
-  ])
-  const litDates = historyRaw.map((d) => d._id)
-
   const litAt = lighthouse.litAt?.toISOString() ?? null
 
   return (
@@ -74,7 +64,7 @@ const LighthousePage = async ({ params }: PageProps) => {
             <div className="flex items-center gap-1 flex-shrink-0 ml-2">
               <InfoButton name={lighthouse.name} description={lighthouse.description ?? null} />
               <LightButton slug={slug} />
-              <HistoryButton litDates={litDates} startDate={startDate.toISOString()} />
+              <HistoryButton slug={slug} startDate={lighthouse.createdAt.toISOString()} lighthouseId={lighthouse._id.toString()} />
               <SaveButton slug={slug} name={lighthouse.name} />
             </div>
           </footer>

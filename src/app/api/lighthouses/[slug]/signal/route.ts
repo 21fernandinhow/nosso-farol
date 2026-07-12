@@ -56,6 +56,7 @@ export const POST = async (
     await Signal.create({ lighthouseId: lighthouse._id })
 
     revalidatePath(`/${slug}`)
+    revalidatePath(`/api/lighthouses/${slug}/history`)
 
     return Response.json({ isLit: true, litAt: lighthouse.litAt.toISOString() })
   } catch (error) {

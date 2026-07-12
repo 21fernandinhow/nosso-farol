@@ -22,6 +22,10 @@ export const LighthouseHistory = ({ litDates, startDate }: LighthouseHistoryProp
   const grid = buildHistoryGrid(litDates, new Date(startDate))
   const [label, setLabel] = useState<string | null>(null)
 
+  if (grid.length === 0) {
+    return <p className="text-sm opacity-50 py-4 text-center">Ainda não há histórico.</p>
+  }
+
   return (
     <div className="flex flex-col gap-2">
       <div
