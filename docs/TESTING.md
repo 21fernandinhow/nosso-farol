@@ -56,6 +56,7 @@ Padrão: mockar `fetch`, renderizar, interagir via `user-event`, asserir texto/e
 - **`SaveButton`** e **`MyLighthouses`** — usam o mesmo hook `useSavedLighthouses`; testar via hook real + jsdom `localStorage` (sem mock de fetch): toggle salvar/remover, `MyLighthouses` não renderiza nada antes de hidratar ou lista vazia, ordena por `savedAt` desc, botão remover funciona.
 - **`HistoryButton`** — ao abrir, faz fetch (mock) e mostra spinner até resolver, depois renderiza `LighthouseHistory`; segunda abertura não refaz o fetch (cache local).
 - **`LighthouseStatus`** — usa o mesmo `formatStatus` já testado isoladamente; aqui só verificar que consome o Provider e atualiza a cada minuto (`vi.useFakeTimers` + `vi.advanceTimersByTime`).
+- **`ShareButton`** (Fase C) — `navigator.share` disponível: chama com `{ title, text, url }` e ignora silenciosamente rejeição (cancelamento); ausente: usa `navigator.clipboard.writeText(url)` como fallback (spy no método existente do stub de clipboard do jsdom, não substituição do objeto inteiro).
 
 Componentes majoritariamente apresentacionais e sem lógica condicional relevante (`LighthouseIcon`, `LighthouseTitle`, `LighthouseDisplay`, `LighthouseHistory` grid puro, `InfoButton`, `CreatedSuccess`) ficam de fora nesta primeira rodada — baixo valor por esforço. Podem ser cobertos depois se necessário.
 
