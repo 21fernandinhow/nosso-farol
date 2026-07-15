@@ -12,6 +12,7 @@ import { InfoButton } from "@/components/lighthouse/InfoButton"
 import { HistoryButton } from "@/components/lighthouse/HistoryButton"
 import { SaveButton } from "@/components/lighthouse/SaveButton"
 import { ShareButton } from "@/components/lighthouse/ShareButton"
+import { InstallButton } from "@/components/shared/InstallButton"
 import { LighthouseStateProvider } from "@/context/LighthouseStateContext"
 
 export const revalidate = false
@@ -62,7 +63,7 @@ const LighthousePage = async ({ params }: PageProps) => {
 
           <footer className="flex items-center justify-between px-4 sm:px-6 py-4">
             <LighthouseStatus />
-            <div className="flex items-center gap-1 flex-shrink-0 ml-2">
+            <div className="flex items-center gap-0.5 flex-shrink-0 ml-2">
               <InfoButton name={lighthouse.name} description={lighthouse.description ?? null} />
               <LightButton slug={slug} />
               <HistoryButton slug={slug} startDate={lighthouse.createdAt.toISOString()} lighthouseId={lighthouse._id.toString()} />

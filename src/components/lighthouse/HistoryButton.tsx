@@ -34,9 +34,9 @@ export const HistoryButton = ({ slug, startDate, lighthouseId }: HistoryButtonPr
     <>
       <button
         className="btn btn-ghost btn-circle tooltip tooltip-top"
-        data-tip="Histórico de sinais"
+        data-tip="Histórico"
         onClick={handleOpen}
-        aria-label="Histórico de sinais"
+        aria-label="Histórico"
       >
         <LuCalendarDays size={20} />
       </button>

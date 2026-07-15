@@ -36,7 +36,7 @@ export const ShareButton = ({ name }: ShareButtonProps) => {
   return (
     <button
       onClick={handleShare}
-      className="btn btn-ghost btn-circle tooltip tooltip-top"
+      className="btn btn-ghost btn-circle tooltip tooltip-left"
       data-tip="Compartilhar"
       aria-label="Compartilhar"
     >

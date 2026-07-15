@@ -57,6 +57,8 @@ Padrão: mockar `fetch`, renderizar, interagir via `user-event`, asserir texto/e
 - **`HistoryButton`** — ao abrir, faz fetch (mock) e mostra spinner até resolver, depois renderiza `LighthouseHistory`; segunda abertura não refaz o fetch (cache local).
 - **`LighthouseStatus`** — usa o mesmo `formatStatus` já testado isoladamente; aqui só verificar que consome o Provider e atualiza a cada minuto (`vi.useFakeTimers` + `vi.advanceTimersByTime`).
 - **`ShareButton`** (Fase C) — `navigator.share` disponível: chama com `{ title, text, url }` e ignora silenciosamente rejeição (cancelamento); ausente: usa `navigator.clipboard.writeText(url)` como fallback (spy no método existente do stub de clipboard do jsdom, não substituição do objeto inteiro).
+- **`InstallButton`** (Fase F) — mock de `window.matchMedia` e `navigator.userAgent`. Cobrir: não renderiza em modo standalone; não renderiza se já dispensado (localStorage); detecção de plataforma (iOS/Android/outro) mostra o texto certo no modal; dispensar salva o flag no localStorage e esconde o botão; evento `beforeinstallprompt` capturado exibe botão "Instalar" que dispara `event.prompt()`.
+- **`ServiceWorkerRegister`** — mock de `navigator.serviceWorker`. Cobrir: chama `register("/sw.js")` quando o navegador suporta; não quebra quando `navigator.serviceWorker` não existe.
 
 Componentes majoritariamente apresentacionais e sem lógica condicional relevante (`LighthouseIcon`, `LighthouseTitle`, `LighthouseDisplay`, `LighthouseHistory` grid puro, `InfoButton`, `CreatedSuccess`) ficam de fora nesta primeira rodada — baixo valor por esforço. Podem ser cobertos depois se necessário.
 

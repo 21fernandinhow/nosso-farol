@@ -22,7 +22,7 @@ describe("LightButton", () => {
   it("fica desabilitado quando o farol já está aceso", async () => {
     renderWithProvider(new Date().toISOString())
 
-    expect(await screen.findByLabelText("Acender o farol")).toBeDisabled()
+    expect(await screen.findByLabelText("Acender")).toBeDisabled()
   })
 
   it("fecha o modal e acende ao ter sucesso", async () => {
@@ -34,11 +34,11 @@ describe("LightButton", () => {
     const user = userEvent.setup()
     renderWithProvider(null)
 
-    await user.click(await screen.findByLabelText("Acender o farol"))
+    await user.click(await screen.findByLabelText("Acender"))
     await user.type(screen.getByPlaceholderText("Senha"), "senha123")
     await user.click(screen.getByRole("button", { name: "Confirmar" }))
 
-    expect(await screen.findByLabelText("Acender o farol")).toBeDisabled()
+    expect(await screen.findByLabelText("Acender")).toBeDisabled()
   })
 
   it("mostra senha incorreta em caso de 401", async () => {
@@ -50,7 +50,7 @@ describe("LightButton", () => {
     const user = userEvent.setup()
     renderWithProvider(null)
 
-    await user.click(await screen.findByLabelText("Acender o farol"))
+    await user.click(await screen.findByLabelText("Acender"))
     await user.type(screen.getByPlaceholderText("Senha"), "errada")
     await user.click(screen.getByRole("button", { name: "Confirmar" }))
 
@@ -66,7 +66,7 @@ describe("LightButton", () => {
     const user = userEvent.setup()
     renderWithProvider(null)
 
-    await user.click(await screen.findByLabelText("Acender o farol"))
+    await user.click(await screen.findByLabelText("Acender"))
     await user.type(screen.getByPlaceholderText("Senha"), "senha123")
     await user.click(screen.getByRole("button", { name: "Confirmar" }))
 
@@ -82,10 +82,10 @@ describe("LightButton", () => {
     const user = userEvent.setup()
     renderWithProvider(null)
 
-    await user.click(await screen.findByLabelText("Acender o farol"))
+    await user.click(await screen.findByLabelText("Acender"))
     await user.type(screen.getByPlaceholderText("Senha"), "senha123")
     await user.click(screen.getByRole("button", { name: "Confirmar" }))
 
-    expect(await screen.findByLabelText("Acender o farol")).toBeDisabled()
+    expect(await screen.findByLabelText("Acender")).toBeDisabled()
   })
 })

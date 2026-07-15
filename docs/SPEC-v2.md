@@ -455,7 +455,7 @@ As fases são independentes, mas esta ordem minimiza retrabalho:
 
 1. ~~**A** (slug personalizado)~~ — ✅ implementado
 2. ~~**B** (meus faróis)~~ — ✅ implementado
-3. **F** (instalar como app) — próxima; sem dependências, alto impacto mobile
+3. ~~**F** (instalar como app)~~ — ✅ implementado
 4. ~~**C** (compartilhar)~~ — ✅ implementado
 5. **D** (segurança) — antes de promover o produto amplamente
 6. **E** (OG dinâmica) — último pois depende de setup Vercel OG e impacta só o social sharing

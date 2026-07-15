@@ -1,6 +1,8 @@
 import type { Metadata, Viewport } from "next";
 import { Lora } from "next/font/google";
 import "./globals.css";
+import { InstallButton } from "@/components/shared/InstallButton";
+import { ServiceWorkerRegister } from "@/components/shared/ServiceWorkerRegister";
 
 const lora = Lora({
   variable: "--font-lora",
@@ -21,12 +23,24 @@ export const metadata: Metadata = {
   openGraph: {
     images: [{ url: "/og-default.png" }],
   },
+  appleWebApp: {
+    capable: true,
+    title: "Nosso Farol",
+    statusBarStyle: "default",
+  },
+  icons: {
+    apple: "/icon-192.png",
+  },
 };
 
 const RootLayout = ({ children }: { children: React.ReactNode }) => {
   return (
     <html lang="pt-BR" data-theme="aqua" className={lora.variable}>
-      <body className="min-h-screen">{children}</body>
+      <body className="min-h-screen">
+        {children}
+        <InstallButton />
+        <ServiceWorkerRegister />
+      </body>
     </html>
   );
 }

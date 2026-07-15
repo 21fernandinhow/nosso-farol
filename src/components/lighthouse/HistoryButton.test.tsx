@@ -24,7 +24,7 @@ describe("HistoryButton", () => {
       <HistoryButton slug="para-ana" startDate="2026-07-01" lighthouseId="507f1f77bcf86cd799439011" />
     )
 
-    await user.click(screen.getByLabelText("Histórico de sinais"))
+    await user.click(screen.getByLabelText("Histórico"))
 
     expect(document.querySelector(".loading-spinner")).toBeInTheDocument()
 
@@ -45,7 +45,7 @@ describe("HistoryButton", () => {
       <HistoryButton slug="para-ana" startDate="2026-07-13" lighthouseId="507f1f77bcf86cd799439011" />
     )
 
-    const button = screen.getByLabelText("Histórico de sinais")
+    const button = screen.getByLabelText("Histórico")
     await user.click(button)
     await screen.findByText("Ainda não há histórico.")
     await user.click(button)
