@@ -24,6 +24,8 @@
 
 Melhorias incrementais sobre o MVP. Cada fase é independente e pode ser implementada e deployada separadamente.
 
+Cada fase segue o fluxo de TDD descrito em [docs/TESTING.md](./TESTING.md): teste primeiro (colocado ao lado do arquivo-alvo), depois implementação mínima, depois refactor. Uma fase só é considerada concluída com `npm run test` e `npx tsc --noEmit` limpos e a cobertura correspondente registrada em TESTING.md.
+
 | Fase | Feature | Impacto |
 |---|---|---|
 | A | Slug personalizado na criação | UX de criação |
@@ -202,6 +204,8 @@ export const useSavedLighthouses = () => {
 
 No mobile, o principal vetor de distribuição é o WhatsApp. O botão nativo integra direto com a lista de contatos e apps instalados, sem precisar copiar a URL manualmente.
 
+> **Testes:** seguir o fluxo do [docs/TESTING.md](./TESTING.md). Mockar `navigator.share` (presente e ausente) e o fallback de clipboard; cobrir a detecção de suporte no `useEffect` e o conteúdo passado para `navigator.share`/clipboard.
+
 ### Comportamento
 
 - Botão "Compartilhar" na slug page, junto aos outros três botões de ação
@@ -226,6 +230,8 @@ navigator.share({
 ---
 
 ## 5. Fase D — Proteções de Segurança
+
+> **Testes:** seguir o fluxo do [docs/TESTING.md](./TESTING.md). Mockar `@upstash/ratelimit`/`Redis.fromEnv()` nas rotas que passam a usá-los (`vi.mock`, mesmo padrão já usado para Mongoose/bcrypt). Cobrir: dentro do limite → segue normalmente; limite atingido → 429 com `Retry-After`; os dois limitadores do signal (por IP e por slug) disparando independentemente.
 
 ### Rate limiting
 
@@ -323,6 +329,8 @@ UPSTASH_REDIS_REST_TOKEN=...
 
 Ao compartilhar um link de farol no WhatsApp ou Twitter, a preview de imagem é o principal driver de clique. Com a OG image estática atual, todos os farois têm a mesma imagem. Com a imagem dinâmica, cada farol mostra seu próprio nome.
 
+> **Testes:** seguir o fluxo do [docs/TESTING.md](./TESTING.md). Testar a lógica de montagem da URL/props do `generateMetadata` (nome codificado, `lit` refletindo o estado); renderizar a imagem de fato com `ImageResponse` foge do escopo de teste unitário.
+
 ### Nova rota
 
 `GET /api/og?name=Para+Ana&lit=true` → PNG 1200×630
@@ -360,6 +368,8 @@ return {
 ### Motivação
 
 O Nosso Farol tem UX contemplativa e tela cheia — funciona muito melhor instalado na tela inicial do que dentro do browser. Usuários mobile raramente sabem que podem instalar; um botão sutil e oportuno aumenta a taxa de instalação sem ser intrusivo.
+
+> **Testes:** seguir o fluxo do [docs/TESTING.md](./TESTING.md). Mockar `window.matchMedia`, `navigator.userAgent` e o evento `beforeinstallprompt`. Cobrir: não renderiza em modo standalone; não renderiza se já dispensado (localStorage); detecção de plataforma (iOS/Android/outro) mostra o texto certo no modal; dispensar salva o flag no localStorage.
 
 ### Comportamento
 

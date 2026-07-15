@@ -71,3 +71,34 @@ Componentes majoritariamente apresentacionais e sem lógica condicional relevant
 - `npm run test` deve rodar tudo verde.
 - `npx tsc --noEmit` (já configurado no projeto) continua limpo com os novos arquivos de teste.
 - Revisar rapidamente a saída do Vitest para confirmar que nenhum teste ficou "skipado" silenciosamente e que a cobertura bate com a lista acima.
+
+## Fluxo de TDD para novas features
+
+Esta infraestrutura existe para ser usada daqui pra frente, não só para cobrir o que já existia. A partir de agora:
+
+1. **Red** — para qualquer mudança não-trivial (fix, endpoint novo, componente com lógica), o primeiro arquivo editado é o `*.test.ts(x)` colocado ao lado do arquivo-alvo, escrito para falhar. Vale tanto para arquivo novo quanto para alteração de um já existente.
+2. **Green** — implementação mínima para o teste passar.
+3. **Refactor** — com os testes verdes como rede de segurança.
+
+### Critério de "pronto"
+
+Uma feature/fix só está concluída quando:
+- `npm run test` está verde;
+- `npx tsc --noEmit` está limpo;
+- a lista de cobertura acima (ou a seção correspondente, se for algo novo) foi atualizada com o que foi adicionado.
+
+Sem teste novo correspondente, a feature não está pronta — mesmo que funcione manualmente.
+
+### O que ganha teste e o que não ganha
+
+Mesmo corte usado na retrofit: lógica real (condicionais, transições de estado, chamadas a API, cálculo) sempre ganha teste. Componente puramente apresentacional (só JSX estático, sem estado/efeito/condição) fica de fora — decisão consciente, não esquecimento.
+
+### Fronteira de mock
+
+Toda dependência externa ao módulo sob teste é mockada no limite do módulo (`vi.mock`), mesma filosofia usada em `Mongoose`, `bcryptjs`, `next/cache` e `fetch` nesta rodada. Para as fases novas do SPEC-v2 isso se estende naturalmente:
+- **Fase F (instalar como app)** — mockar `window.matchMedia`, `navigator.userAgent` e o evento `beforeinstallprompt`.
+- **Fase C (compartilhar)** — mockar `navigator.share` (presente/ausente) e o fallback de clipboard.
+- **Fase D (segurança)** — mockar `@upstash/ratelimit`/`Redis.fromEnv()` nas rotas que passam a usá-lo.
+- **Fase E (OG dinâmica)** — testar a lógica de montagem de props/URL do `generateMetadata`; renderizar a imagem de fato com `ImageResponse` foge do escopo de teste unitário.
+
+Continua sem banco real e sem E2E — meramente unitário, como decidido no início deste documento.
