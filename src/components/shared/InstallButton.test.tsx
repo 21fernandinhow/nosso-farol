@@ -64,7 +64,7 @@ describe("InstallButton", () => {
 
     await user.click(await screen.findByLabelText("Instalar aplicativo"))
 
-    expect(screen.getByText("Instale com um clique:")).toBeInTheDocument()
+    expect(screen.getByText("Adicionar à tela inicial")).toBeInTheDocument()
   })
 
   it("mostra instruções genéricas para outras plataformas", async () => {

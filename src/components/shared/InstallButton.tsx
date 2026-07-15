@@ -68,7 +68,14 @@ export const InstallButton = () => {
             Instale como app e abra em segundos, sem navegador.
           </p>
 
-          {platform === "ios" && (
+          {deferredPrompt ? (
+            <div>
+              <p className="text-sm text-base-content/80">Instale com um clique:</p>
+              <button className="btn btn-primary w-full mt-2" onClick={handleInstall}>
+                Instalar app
+              </button>
+            </div>
+          ) : platform === "ios" ? (
             <div>
               <p className="text-sm text-base-content/80">Para instalar, use o botão de compartilhar:</p>
               <ol className="list-decimal list-inside space-y-2 text-sm mt-2">
@@ -82,26 +89,17 @@ export const InstallButton = () => {
                 <li>Confirme em <strong>Adicionar</strong>.</li>
               </ol>
             </div>
-          )}
-
-          {platform === "android" && (
-            <div>
-              <p className="text-sm text-base-content/80">Instale com um clique:</p>
-              {!deferredPrompt && (
-                <div className="alert alert-warning mt-2">
-                  <span className="text-sm">
-                    Se o botão não aparecer, abra o menu{" "}
-                    <span className="inline-flex align-middle">
-                      <LuEllipsisVertical size={16} />
-                    </span>{" "}
-                    e toque em <strong>Instalar app</strong> ou <strong>Adicionar à tela inicial</strong>.
-                  </span>
-                </div>
-              )}
+          ) : platform === "android" ? (
+            <div className="alert alert-warning">
+              <span className="text-sm">
+                Abra o menu{" "}
+                <span className="inline-flex align-middle">
+                  <LuEllipsisVertical size={16} />
+                </span>{" "}
+                e toque em <strong>Instalar app</strong> ou <strong>Adicionar à tela inicial</strong>.
+              </span>
             </div>
-          )}
-
-          {platform === "other" && (
+          ) : (
             <p className="text-sm text-base-content/80">
               No seu navegador, abra o menu{" "}
               <span className="inline-flex align-middle">
@@ -115,11 +113,6 @@ export const InstallButton = () => {
             <button className="btn btn-ghost btn-sm" onClick={handleDismiss}>
               Agora não
             </button>
-            {deferredPrompt && (
-              <button className="btn btn-sm btn-primary" onClick={handleInstall}>
-                Instalar app
-              </button>
-            )}
             <form method="dialog">
               <button className="btn btn-sm">Fechar</button>
             </form>
