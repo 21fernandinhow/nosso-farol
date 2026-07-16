@@ -102,6 +102,6 @@ Toda dependência externa ao módulo sob teste é mockada no limite do módulo (
 - **Fase F (instalar como app)** — mockar `window.matchMedia`, `navigator.userAgent` e o evento `beforeinstallprompt`.
 - **Fase C (compartilhar)** — mockar `navigator.share` (presente/ausente) e o fallback de clipboard.
 - **Fase D (segurança)** — mockar `@upstash/ratelimit`/`Redis.fromEnv()` nas rotas que passam a usá-lo.
-- **Fase E (OG dinâmica)** — testar a lógica de montagem de props/URL do `generateMetadata`; renderizar a imagem de fato com `ImageResponse` foge do escopo de teste unitário.
+- **Fase E (OG padrão)** — asset estático (`public/og-default.png`) sem lógica; sem teste unitário. Título/descrição dinâmicos já cobertos pelo `generateMetadata` existente (fora do escopo de teste unitário de imagem).
 
 Continua sem banco real e sem E2E — meramente unitário, como decidido no início deste documento.

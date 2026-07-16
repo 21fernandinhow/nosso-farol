@@ -36,7 +36,7 @@ export const generateMetadata = async ({ params }: PageProps): Promise<Metadata>
     openGraph: {
       title: lighthouse.name,
       description: "Um sinal silencioso de que alguém pensou em você.",
-      images: [{ url: "/og-default.png" }],
+      images: [{ url: "/og-default.png", width: 1200, height: 630 }],
     },
   }
 }

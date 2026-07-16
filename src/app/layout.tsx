@@ -21,7 +21,7 @@ export const metadata: Metadata = {
   title: "Nosso Farol",
   description: "Um sinal silencioso de que alguém pensou em você.",
   openGraph: {
-    images: [{ url: "/og-default.png" }],
+    images: [{ url: "/og-default.png", width: 1200, height: 630 }],
   },
   appleWebApp: {
     capable: true,

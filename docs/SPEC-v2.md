@@ -14,7 +14,7 @@
 3. [Fase B — Meus Faróis](#3-fase-b--meus-faróis)
 4. [Fase C — Compartilhar Nativo](#4-fase-c--compartilhar-nativo)
 5. [Fase D — Proteções de Segurança](#5-fase-d--proteções-de-segurança)
-6. [Fase E — OG Image Dinâmica](#6-fase-e--og-image-dinâmica)
+6. [Fase E — OG Image padrão](#6-fase-e--og-image-padrão)
 7. [Fase F — Instalar como App](#7-fase-f--instalar-como-app)
 8. [Dependências Novas](#8-dependências-novas)
 
@@ -32,7 +32,7 @@ Cada fase segue o fluxo de TDD descrito em [docs/TESTING.md](./TESTING.md): test
 | B | Meus Faróis (localStorage) | Retenção / retorno |
 | C | Compartilhar nativo (Web Share API) | Distribuição |
 | D | Proteções de segurança | Confiabilidade |
-| E | OG image dinâmica | Engajamento social |
+| E | OG image padrão | Engajamento social |
 | F | Instalar como App (PWA) | Distribuição / retenção mobile |
 
 ---
@@ -323,43 +323,38 @@ UPSTASH_REDIS_REST_TOKEN=...
 
 ---
 
-## 6. Fase E — OG Image Dinâmica
+## 6. Fase E — OG Image padrão
+
+> **Status:** ✅ implementado
 
 ### Motivação
 
-Ao compartilhar um link de farol no WhatsApp ou Twitter, a preview de imagem é o principal driver de clique. Com a OG image estática atual, todos os farois têm a mesma imagem. Com a imagem dinâmica, cada farol mostra seu próprio nome.
+Ao compartilhar um link no WhatsApp ou Twitter, a preview combina título, descrição e imagem. Título e descrição já são dinâmicos por farol via `generateMetadata`. A imagem só precisa ser um visual de marca único — farol no fundo teal — compartilhado por todas as páginas.
 
-> **Testes:** seguir o fluxo do [docs/TESTING.md](./TESTING.md). Testar a lógica de montagem da URL/props do `generateMetadata` (nome codificado, `lit` refletindo o estado); renderizar a imagem de fato com `ImageResponse` foge do escopo de teste unitário.
+PNG dinâmico com o nome embutido (`ImageResponse` / `@vercel/og`) foi considerado e descartado: overengineering para o estágio atual. O nome já aparece no título da preview.
 
-### Nova rota
+> **Testes:** asset estático sem lógica — sem teste unitário. Ver [docs/TESTING.md](./TESTING.md).
 
-`GET /api/og?name=Para+Ana&lit=true` → PNG 1200×630
+### Entrega
 
-Implementada com `@vercel/og` (ImageResponse).
-
-### Design da imagem
+`public/og-default.png` — PNG 1200×630:
 
 - Fundo: `#042f2e` (mesmo teal escuro do app)
-- Centro: lighthouse SVG simplificado (aceso ou apagado conforme `lit`)
-- Nome do farol em Lora serif, tamanho grande, branco ou `#fde68a` se aceso
+- Centro: lighthouse SVG estilizado (aceso), alinhado ao `LighthouseIcon`
 - Subtítulo: "Nosso Farol" pequeno, opacidade baixa
+- Sem nome de farol específico
 
-### Atualização do `generateMetadata`
+### Metadata
+
+Layout e slug page apontam para a mesma imagem:
 
 ```typescript
-// src/app/[slug]/page.tsx
-const ogUrl = `/api/og?name=${encodeURIComponent(lighthouse.name)}&lit=${lighthouse.isLit}`
-
-return {
-  openGraph: {
-    images: [{ url: ogUrl, width: 1200, height: 630 }],
-  },
+openGraph: {
+  images: [{ url: "/og-default.png", width: 1200, height: 630 }],
 }
 ```
 
-### Componente
-
-`src/app/api/og/route.tsx` exporta `GET` usando `ImageResponse` do `@vercel/og`. O farol SVG é inlinado diretamente no JSX da ImageResponse (não importa componentes externos — limitação do `@vercel/og`).
+Na slug page, `title` / `openGraph.title` / `description` continuam dinâmicos com o nome do farol; só a imagem é estática.
 
 ---
 
@@ -443,9 +438,8 @@ Como Client Component que renderiza `null` antes de hidratar, não afeta SSR nem
 |---|---|---|
 | `@upstash/ratelimit` | D | Rate limiting stateful em serverless |
 | `@upstash/redis` | D | Driver Redis para Upstash |
-| `@vercel/og` | E | Geração de imagem OG no Edge |
 
-As fases A, B, C e F não adicionam dependências.
+As fases A, B, C, E e F não adicionam dependências.
 
 ---
 
@@ -457,8 +451,8 @@ As fases são independentes, mas esta ordem minimiza retrabalho:
 2. ~~**B** (meus faróis)~~ — ✅ implementado
 3. ~~**F** (instalar como app)~~ — ✅ implementado
 4. ~~**C** (compartilhar)~~ — ✅ implementado
-5. **D** (segurança) — antes de promover o produto amplamente
-6. **E** (OG dinâmica) — último pois depende de setup Vercel OG e impacta só o social sharing
+5. ~~**E** (OG image padrão)~~ — ✅ implementado
+6. **D** (segurança) — antes de promover o produto amplamente
 
 ---
 
