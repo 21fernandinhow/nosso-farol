@@ -3,7 +3,7 @@
 **Versão:** 2.0  
 **Data:** Junho 2026  
 **Referência:** [SPEC.md](./SPEC.md)  
-**Status:** Planejado
+**Status:** ✅ Completo
 
 ---
 
@@ -231,7 +231,7 @@ navigator.share({
 
 ## 5. Fase D — Proteções de Segurança
 
-> **Testes:** seguir o fluxo do [docs/TESTING.md](./TESTING.md). Mockar `@upstash/ratelimit`/`Redis.fromEnv()` nas rotas que passam a usá-los (`vi.mock`, mesmo padrão já usado para Mongoose/bcrypt). Cobrir: dentro do limite → segue normalmente; limite atingido → 429 com `Retry-After`; os dois limitadores do signal (por IP e por slug) disparando independentemente.
+> **Status:** ✅ implementado. Testes cobrindo: 429 por IP no create; 429 por IP e por slug independentemente no signal; 429 por IP no check; todos os casos happy-path seguem normalmente com mock `success: true`.
 
 ### Rate limiting
 
@@ -452,7 +452,7 @@ As fases são independentes, mas esta ordem minimiza retrabalho:
 3. ~~**F** (instalar como app)~~ — ✅ implementado
 4. ~~**C** (compartilhar)~~ — ✅ implementado
 5. ~~**E** (OG image padrão)~~ — ✅ implementado
-6. **D** (segurança) — antes de promover o produto amplamente
+6. ~~**D** (segurança)~~ — ✅ implementado
 
 ---
 

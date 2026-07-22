@@ -1,13 +1,14 @@
 import { connectDB } from "@/lib/mongodb"
+import { lighthouseCreateLimit } from "@/lib/ratelimit"
 import { generateUniqueSlug } from "@/lib/slug"
 import { Lighthouse } from "@/models/Lighthouse"
 import bcrypt from "bcryptjs"
 import { z } from "zod"
 
 const schema = z.object({
-  name: z.string().min(1).max(80).trim(),
+  name: z.string().trim().min(1).max(80).regex(/\S/, "Nome não pode ser só espaços"),
   description: z.string().max(256).trim().nullable().optional(),
-  password: z.string().min(4).max(128),
+  password: z.string().trim().min(4).max(128).regex(/\S/, "Senha não pode ser só espaços"),
   customSlug: z
     .string()
     .min(3)
@@ -18,6 +19,15 @@ const schema = z.object({
 
 export const POST = async (request: Request) => {
   try {
+    const ip = request.headers.get("x-forwarded-for")?.split(",")[0].trim() ?? "anonymous"
+    const { success, reset } = await lighthouseCreateLimit.limit(ip)
+    if (!success) {
+      return Response.json(
+        { error: "Muitas tentativas. Tente novamente em breve." },
+        { status: 429, headers: { "Retry-After": String(Math.ceil(reset / 1000)) } }
+      )
+    }
+
     await connectDB()
 
     const body = await request.json()

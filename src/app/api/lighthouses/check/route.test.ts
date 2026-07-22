@@ -1,9 +1,13 @@
 import { NextRequest } from "next/server"
 import { connectDB } from "@/lib/mongodb"
+import { checkSlugLimit } from "@/lib/ratelimit"
 import { Lighthouse } from "@/models/Lighthouse"
 import { GET } from "./route"
 
 vi.mock("@/lib/mongodb", () => ({ connectDB: vi.fn() }))
+vi.mock("@/lib/ratelimit", () => ({
+  checkSlugLimit: { limit: vi.fn() },
+}))
 vi.mock("@/models/Lighthouse", () => ({
   Lighthouse: { exists: vi.fn() },
 }))
@@ -13,8 +17,18 @@ const request = (slug: string) =>
 
 describe("GET /api/lighthouses/check", () => {
   beforeEach(() => {
+    vi.mocked(checkSlugLimit.limit).mockResolvedValue({ success: true, reset: 0 } as never)
     vi.mocked(connectDB).mockReset()
     vi.mocked(Lighthouse.exists).mockReset()
+  })
+
+  it("retorna 429 quando o limite de checks por IP é atingido", async () => {
+    vi.mocked(checkSlugLimit.limit).mockResolvedValue({ success: false, reset: 1000 } as never)
+
+    const res = await GET(request("para-ana"))
+
+    expect(res.status).toBe(429)
+    expect(connectDB).not.toHaveBeenCalled()
   })
 
   it("retorna available: false para slug fora do formato, sem consultar o banco", async () => {

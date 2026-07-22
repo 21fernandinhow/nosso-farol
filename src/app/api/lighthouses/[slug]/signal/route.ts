@@ -1,12 +1,13 @@
 import { revalidatePath } from "next/cache"
 import { connectDB } from "@/lib/mongodb"
+import { signalByIpLimit, signalBySlugLimit } from "@/lib/ratelimit"
 import { Lighthouse } from "@/models/Lighthouse"
 import { Signal } from "@/models/Signal"
 import bcrypt from "bcryptjs"
 import { z } from "zod"
 
 const schema = z.object({
-  password: z.string().min(1),
+  password: z.string().trim().min(4).max(128).regex(/\S/, "Senha não pode ser só espaços"),
   tz: z.number().int().optional(),
 })
 
@@ -15,9 +16,23 @@ export const POST = async (
   { params }: { params: Promise<{ slug: string }> }
 ) => {
   try {
-    await connectDB()
-
     const { slug } = await params
+    const ip = request.headers.get("x-forwarded-for")?.split(",")[0].trim() ?? "anonymous"
+
+    const [byIp, bySlug] = await Promise.all([
+      signalByIpLimit.limit(ip),
+      signalBySlugLimit.limit(slug),
+    ])
+
+    if (!byIp.success || !bySlug.success) {
+      const reset = Math.max(byIp.reset, bySlug.reset)
+      return Response.json(
+        { error: "Muitas tentativas. Tente novamente em breve." },
+        { status: 429, headers: { "Retry-After": String(Math.ceil(reset / 1000)) } }
+      )
+    }
+
+    await connectDB()
     const body = await request.json()
     const result = schema.safeParse(body)
 

@@ -1,11 +1,16 @@
 import bcrypt from "bcryptjs"
 import { revalidatePath } from "next/cache"
 import { connectDB } from "@/lib/mongodb"
+import { signalByIpLimit, signalBySlugLimit } from "@/lib/ratelimit"
 import { Lighthouse } from "@/models/Lighthouse"
 import { Signal } from "@/models/Signal"
 import { POST } from "./route"
 
 vi.mock("@/lib/mongodb", () => ({ connectDB: vi.fn() }))
+vi.mock("@/lib/ratelimit", () => ({
+  signalByIpLimit: { limit: vi.fn() },
+  signalBySlugLimit: { limit: vi.fn() },
+}))
 vi.mock("@/models/Lighthouse", () => ({
   Lighthouse: { findOne: vi.fn() },
 }))
@@ -30,6 +35,8 @@ const findOneChain = (lighthouse: unknown) => ({
 
 describe("POST /api/lighthouses/[slug]/signal", () => {
   beforeEach(() => {
+    vi.mocked(signalByIpLimit.limit).mockResolvedValue({ success: true, reset: 0 } as never)
+    vi.mocked(signalBySlugLimit.limit).mockResolvedValue({ success: true, reset: 0 } as never)
     vi.mocked(connectDB).mockReset()
     vi.mocked(Lighthouse.findOne).mockReset()
     vi.mocked(Signal.create).mockReset()
@@ -40,6 +47,24 @@ describe("POST /api/lighthouses/[slug]/signal", () => {
 
   afterEach(() => {
     vi.useRealTimers()
+  })
+
+  it("retorna 429 quando o limite por IP é atingido", async () => {
+    vi.mocked(signalByIpLimit.limit).mockResolvedValue({ success: false, reset: 1000 } as never)
+
+    const res = await call({ password: "senha123" })
+
+    expect(res.status).toBe(429)
+    expect(connectDB).not.toHaveBeenCalled()
+  })
+
+  it("retorna 429 quando o limite por slug é atingido", async () => {
+    vi.mocked(signalBySlugLimit.limit).mockResolvedValue({ success: false, reset: 2000 } as never)
+
+    const res = await call({ password: "senha123" })
+
+    expect(res.status).toBe(429)
+    expect(connectDB).not.toHaveBeenCalled()
   })
 
   it("retorna 400 para payload inválido", async () => {

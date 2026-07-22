@@ -1,10 +1,14 @@
 import bcrypt from "bcryptjs"
 import { connectDB } from "@/lib/mongodb"
+import { lighthouseCreateLimit } from "@/lib/ratelimit"
 import { generateUniqueSlug } from "@/lib/slug"
 import { Lighthouse } from "@/models/Lighthouse"
 import { POST } from "./route"
 
 vi.mock("@/lib/mongodb", () => ({ connectDB: vi.fn() }))
+vi.mock("@/lib/ratelimit", () => ({
+  lighthouseCreateLimit: { limit: vi.fn() },
+}))
 vi.mock("@/lib/slug", () => ({ generateUniqueSlug: vi.fn() }))
 vi.mock("@/models/Lighthouse", () => ({
   Lighthouse: { exists: vi.fn(), create: vi.fn() },
@@ -19,11 +23,21 @@ const request = (body: unknown) =>
 
 describe("POST /api/lighthouses", () => {
   beforeEach(() => {
+    vi.mocked(lighthouseCreateLimit.limit).mockResolvedValue({ success: true, reset: 0 } as never)
     vi.mocked(connectDB).mockReset()
     vi.mocked(generateUniqueSlug).mockReset()
     vi.mocked(Lighthouse.exists).mockReset()
     vi.mocked(Lighthouse.create).mockReset()
     vi.mocked(bcrypt.hash).mockReset().mockResolvedValue("hashed-password" as never)
+  })
+
+  it("retorna 429 quando o limite de criações por IP é atingido", async () => {
+    vi.mocked(lighthouseCreateLimit.limit).mockResolvedValue({ success: false, reset: 1000 } as never)
+
+    const res = await POST(request({ name: "Ana", password: "senha123" }))
+
+    expect(res.status).toBe(429)
+    expect(connectDB).not.toHaveBeenCalled()
   })
 
   it("retorna 400 para payload inválido", async () => {
