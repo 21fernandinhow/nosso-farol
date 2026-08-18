@@ -39,6 +39,8 @@ export const MyLighthouses = () => {
                   href={`/${lighthouse.slug}`}
                   className="flex-1 text-sm font-medium truncate pr-2"
                   onClick={() => dialogRef.current?.close()}
+                  target="_blank" 
+                  rel="noopener noreferrer"
                 >
                   {lighthouse.name}
                 </Link>
